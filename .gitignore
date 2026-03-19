@@ -49,3 +49,4 @@ PngOpti Localizations/
 
 # install-service (internal)
 install-service.sh
+.notarize-credentials

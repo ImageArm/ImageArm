@@ -1,7 +1,9 @@
 import SwiftUI
+import AppKit
 
 struct LogConsoleView: View {
     @EnvironmentObject var logStore: LogStore
+    @State private var copyConfirmed = false
 
     var body: some View {
         VStack(spacing: 0) {
@@ -20,6 +22,25 @@ struct LogConsoleView: View {
                 Text("\(logStore.entries.count) lignes")
                     .font(.caption2)
                     .foregroundStyle(.tertiary)
+
+                Button {
+                    let text = logStore.entries
+                        .map { "[\($0.formattedTime)] \($0.message)" }
+                        .joined(separator: "\n")
+                    NSPasteboard.general.clearContents()
+                    NSPasteboard.general.setString(text, forType: .string)
+                    copyConfirmed = true
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                        copyConfirmed = false
+                    }
+                } label: {
+                    Image(systemName: copyConfirmed ? "checkmark" : "doc.on.doc")
+                        .font(.caption2)
+                        .foregroundStyle(copyConfirmed ? .green : .secondary)
+                }
+                .buttonStyle(.plain)
+                .help("Copier tout dans le presse-papier")
+                .disabled(logStore.entries.isEmpty)
 
                 Button {
                     logStore.clear()

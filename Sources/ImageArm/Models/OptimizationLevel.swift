@@ -171,6 +171,49 @@ enum OptimizationLevel: Int, CaseIterable, Identifiable, Codable {
         }
     }
 
+    // MARK: - GIF Settings
+
+    var gifOptimizeLevel: Int {
+        switch self {
+        case .quick: return 1
+        case .standard: return 2
+        case .high, .ultra: return 3
+        }
+    }
+
+    var gifLossy: Bool {
+        switch self {
+        case .quick, .standard: return false
+        case .high, .ultra: return true
+        }
+    }
+
+    var gifLossyLevel: Int {
+        switch self {
+        case .quick, .standard: return 0
+        case .high: return 80
+        case .ultra: return 120
+        }
+    }
+
+    // MARK: - AVIF Settings
+
+    var avifLossy: Bool {
+        switch self {
+        case .quick, .standard: return false
+        case .high, .ultra: return true
+        }
+    }
+
+    var avifQuality: Int {
+        switch self {
+        case .quick: return 90
+        case .standard: return 80
+        case .high: return 65
+        case .ultra: return 45
+        }
+    }
+
     // MARK: - SVG Settings
 
     var svgoMultipass: Bool {
@@ -212,6 +255,15 @@ enum OptimizationLevel: Int, CaseIterable, Identifiable, Codable {
             var steps = 0
             if heifLossy { steps += 1 }  // lossy
             steps += 1                    // lossless (always)
+            return steps
+        case .gif:
+            return 1
+        case .tiff:
+            return 1
+        case .avif:
+            var steps = 0
+            if avifLossy { steps += 1 }
+            steps += 1  // max quality (always)
             return steps
         case .svg:
             return 1

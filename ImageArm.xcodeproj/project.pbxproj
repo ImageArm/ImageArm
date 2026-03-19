@@ -322,7 +322,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "cp -f \"$PROJECT_DIR/tools/bin/pngquant\" \"$BUILT_PRODUCTS_DIR/$EXECUTABLE_FOLDER_PATH/\"\ncp -f \"$PROJECT_DIR/tools/bin/oxipng\" \"$BUILT_PRODUCTS_DIR/$EXECUTABLE_FOLDER_PATH/\"\ncp -f \"$PROJECT_DIR/tools/bin/pngcrush\" \"$BUILT_PRODUCTS_DIR/$EXECUTABLE_FOLDER_PATH/\"\ncp -f \"$PROJECT_DIR/tools/bin/cjpeg\" \"$BUILT_PRODUCTS_DIR/$EXECUTABLE_FOLDER_PATH/\"\ncp -f \"$PROJECT_DIR/tools/bin/jpegtran\" \"$BUILT_PRODUCTS_DIR/$EXECUTABLE_FOLDER_PATH/\"\ncp -f \"$PROJECT_DIR/tools/bin/svgo\" \"$BUILT_PRODUCTS_DIR/$EXECUTABLE_FOLDER_PATH/\"\ncp -f \"$PROJECT_DIR/tools/bin/cwebp\" \"$BUILT_PRODUCTS_DIR/$EXECUTABLE_FOLDER_PATH/\"\n";
+			shellScript = "cp -f \"$PROJECT_DIR/tools/bin/pngquant\" \"$BUILT_PRODUCTS_DIR/$EXECUTABLE_FOLDER_PATH/\"\ncp -f \"$PROJECT_DIR/tools/bin/oxipng\" \"$BUILT_PRODUCTS_DIR/$EXECUTABLE_FOLDER_PATH/\"\ncp -f \"$PROJECT_DIR/tools/bin/pngcrush\" \"$BUILT_PRODUCTS_DIR/$EXECUTABLE_FOLDER_PATH/\"\ncp -f \"$PROJECT_DIR/tools/bin/cjpeg\" \"$BUILT_PRODUCTS_DIR/$EXECUTABLE_FOLDER_PATH/\"\ncp -f \"$PROJECT_DIR/tools/bin/jpegtran\" \"$BUILT_PRODUCTS_DIR/$EXECUTABLE_FOLDER_PATH/\"\ncp -f \"$PROJECT_DIR/tools/bin/svgo\" \"$BUILT_PRODUCTS_DIR/$EXECUTABLE_FOLDER_PATH/\"\ncp -f \"$PROJECT_DIR/tools/bin/cwebp\" \"$BUILT_PRODUCTS_DIR/$EXECUTABLE_FOLDER_PATH/\"\ncp -f \"$PROJECT_DIR/tools/bin/gifsicle\" \"$BUILT_PRODUCTS_DIR/$EXECUTABLE_FOLDER_PATH/\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 

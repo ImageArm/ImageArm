@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-ImageArm is a macOS SwiftUI app (macOS 14+) that batch-optimizes images (PNG, JPEG, GIF, SVG, WebP) using a pipeline of external CLI tools and Metal GPU acceleration. The UI is in French.
+ImageArm is a macOS SwiftUI app (macOS 14+) that batch-optimizes images (PNG, JPEG, GIF, TIFF, AVIF, SVG, WebP) using a pipeline of external CLI tools and Metal GPU acceleration. The UI is in French.
 
 ## Build & Run
 
@@ -34,9 +34,12 @@ No tests exist in the project.
 ### Optimization pipeline (ImageOptimizer)
 
 For each image format, multiple tools run sequentially and compete — the smallest output wins:
-- **PNG**: GPU quantize (Metal) → pngquant → oxipng → pngcrush → advpng
-- **JPEG**: GPU hardware encode → jpegoptim → mozjpeg/jpegtran
-- **GIF**: gifsicle
+- **PNG**: GPU quantize (Metal) → pngquant → oxipng → pngcrush
+- **JPEG**: GPU hardware encode → mozjpeg/jpegtran
+- **HEIF**: GPU lossy encode → GPU max-quality encode
+- **GIF**: gifsicle (lossless quick/standard, lossy `--lossy=80/120` en high/ultra)
+- **TIFF**: tiffutil -lzw (recompression LZW lossless, macOS natif)
+- **AVIF**: GPU natif macOS 14 (ImageIO/CGImageDestination) — lossy quality 65/45 en high/ultra + max quality always, keep best
 - **SVG**: svgo
 - **WebP**: cwebp
 
@@ -44,7 +47,7 @@ The pipeline uses temp files (`*.imagearm.tmp`, `*.imagearm.*`) with safe atomic
 
 ### External tool dependencies (installed via Homebrew/npm)
 
-pngquant, oxipng, pngcrush, advpng (advancecomp), jpegoptim, mozjpeg, gifsicle, svgo, cwebp (webp). Tools are optional — missing tools are silently skipped.
+pngquant, oxipng, pngcrush, mozjpeg, gifsicle, svgo, cwebp (webp). `tiffutil` est intégré macOS (`/usr/bin`). AVIF utilise ImageIO natif (macOS 14+, aucune dépendance externe). Tools are optional — missing tools are silently skipped.
 
 ### GPU acceleration
 

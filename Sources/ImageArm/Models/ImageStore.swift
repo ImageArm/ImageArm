@@ -83,8 +83,9 @@ final class ImageStore: ObservableObject {
         files.first(where: { $0.status.currentTool != nil })?.id
     }
 
-    static let supportedTypes: [UTType] = [.png, .jpeg, .heic, .svg, .webP]
-    static let supportedExtensions = Set(["png", "jpg", "jpeg", "heic", "heif", "svg", "webp"])
+    static let supportedTypes: [UTType] = ([.png, .jpeg, .heic, .gif, .tiff, .svg, .webP] as [UTType])
+        + [UTType(filenameExtension: "avif")].compactMap { $0 }
+    static let supportedExtensions = Set(["png", "jpg", "jpeg", "heic", "heif", "gif", "tiff", "tif", "avif", "svg", "webp"])
 
     func addFiles(urls: [URL]) {
         let existingURLs = Set(files.map(\.url))

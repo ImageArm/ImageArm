@@ -34,6 +34,7 @@ targets:
           cp -f "$PROJECT_DIR/tools/bin/jpegtran" "$BUILT_PRODUCTS_DIR/$EXECUTABLE_FOLDER_PATH/"
           cp -f "$PROJECT_DIR/tools/bin/svgo" "$BUILT_PRODUCTS_DIR/$EXECUTABLE_FOLDER_PATH/"
           cp -f "$PROJECT_DIR/tools/bin/cwebp" "$BUILT_PRODUCTS_DIR/$EXECUTABLE_FOLDER_PATH/"
+          cp -f "$PROJECT_DIR/tools/bin/gifsicle" "$BUILT_PRODUCTS_DIR/$EXECUTABLE_FOLDER_PATH/"
         name: "Copier outils CLI dans Contents/MacOS/"
         basedOnDependencyAnalysis: false
     scheme:

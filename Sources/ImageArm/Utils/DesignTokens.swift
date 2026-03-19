@@ -7,6 +7,9 @@ enum DesignTokens {
         static let png = Color.blue
         static let jpeg = Color.orange
         static let heif = Color.purple
+        static let gif = Color.pink
+        static let tiff = Color.indigo
+        static let avif = Color.mint
         static let svg = Color.teal
         static let webp = Color.cyan
         static let unknown = Color.gray
@@ -37,6 +40,9 @@ extension ImageFormat {
         case .png: return DesignTokens.FormatColor.png
         case .jpeg: return DesignTokens.FormatColor.jpeg
         case .heif: return DesignTokens.FormatColor.heif
+        case .gif: return DesignTokens.FormatColor.gif
+        case .tiff: return DesignTokens.FormatColor.tiff
+        case .avif: return DesignTokens.FormatColor.avif
         case .svg: return DesignTokens.FormatColor.svg
         case .webp: return DesignTokens.FormatColor.webp
         case .unknown: return DesignTokens.FormatColor.unknown

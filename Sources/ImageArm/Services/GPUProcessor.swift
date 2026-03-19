@@ -294,6 +294,48 @@ final class GPUProcessor: @unchecked Sendable {
         }
     }
 
+    // MARK: - AVIF Hardware Encoding (macOS 14+)
+
+    private static let avifUTI = "public.avif"
+
+    func encodeAVIFHardware(inputPath: String, outputPath: String, quality: Int, stripMetadata: Bool) throws {
+        guard let cgImage = loadCGImage(from: inputPath) else {
+            throw GPUError.processingFailed
+        }
+
+        guard cgImage.width > 0, cgImage.height > 0,
+              cgImage.width <= Self.maxTextureDimension, cgImage.height <= Self.maxTextureDimension else {
+            throw GPUError.processingFailed
+        }
+
+        let url = URL(fileURLWithPath: outputPath)
+        guard let dest = CGImageDestinationCreateWithURL(url as CFURL, Self.avifUTI as CFString, 1, nil) else {
+            throw GPUError.processingFailed
+        }
+
+        var options: [CFString: Any] = [
+            kCGImageDestinationLossyCompressionQuality: Float(quality) / 100.0,
+        ]
+
+        if !stripMetadata,
+           let source = CGImageSourceCreateWithURL(URL(fileURLWithPath: inputPath) as CFURL, nil),
+           let metadata = CGImageSourceCopyPropertiesAtIndex(source, 0, nil) as? [CFString: Any] {
+            for (key, value) in metadata {
+                options[key] = value
+            }
+        }
+
+        CGImageDestinationAddImage(dest, cgImage, options as CFDictionary)
+        guard CGImageDestinationFinalize(dest) else {
+            throw GPUError.processingFailed
+        }
+    }
+
+    func encodeAVIFMaxQuality(inputPath: String, outputPath: String, stripMetadata: Bool) throws {
+        // quality=95 (0.95) évite le code path lossless de ImageIO qui échoue sur macOS 14
+        try encodeAVIFHardware(inputPath: inputPath, outputPath: outputPath, quality: 95, stripMetadata: stripMetadata)
+    }
+
     // MARK: - Helpers
 
     private func loadCGImage(from path: String) -> CGImage? {

@@ -42,7 +42,8 @@ final class ToolManager: Sendable {
 
     init() {
         let names = ["pngquant", "oxipng", "pngcrush",
-                     "cjpeg", "jpegtran", "svgo", "cwebp"]
+                     "cjpeg", "jpegtran", "svgo", "cwebp",
+                     "gifsicle", "tiffutil"]
         var cache: [String: String] = [:]
         for name in names {
             if let path = Self.resolvePath(name) {
@@ -76,6 +77,9 @@ final class ToolManager: Sendable {
             ToolInfo(name: "jpegtran (mozjpeg)", path: find("jpegtran"), installCommand: "brew install mozjpeg"),
             ToolInfo(name: "svgo",             path: find("svgo"),      installCommand: "npm install -g svgo"),
             ToolInfo(name: "cwebp",            path: find("cwebp"),     installCommand: "brew install webp"),
+            ToolInfo(name: "gifsicle",         path: find("gifsicle"),  installCommand: "brew install gifsicle"),
+            ToolInfo(name: "gifsicle",         path: find("gifsicle"),  installCommand: "brew install gifsicle"),
+            ToolInfo(name: "tiffutil",         path: find("tiffutil"),  installCommand: "(intégré macOS)"),
         ]
     }
 

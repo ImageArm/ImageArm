@@ -17,6 +17,9 @@ actor ImageOptimizer {
         case .png:   await optimizePNG(file: file, level: level, overrides: overrides)
         case .jpeg:  await optimizeJPEG(file: file, level: level, overrides: overrides)
         case .heif:  await optimizeHEIF(file: file, level: level)
+        case .gif:   await optimizeGIF(file: file, level: level)
+        case .tiff:  await optimizeTIFF(file: file, level: level)
+        case .avif:  await optimizeAVIF(file: file, level: level)
         case .svg:   await optimizeSVG(file: file, level: level)
         case .webp:  await optimizeWebP(file: file, level: level)
         case .unknown:
@@ -286,6 +289,143 @@ actor ImageOptimizer {
         return max(steps, 1)
     }
 
+    // MARK: - GIF
+
+    private func optimizeGIF(file: ImageFile, level: OptimizationLevel) async {
+        let path = file.url.path
+        guard let gifsicle = toolManager.find("gifsicle") else {
+            optiLog("\(file.url.lastPathComponent) : gifsicle non disponible, ignoré", level: .info)
+            await MainActor.run { file.status = .alreadyOptimal }
+            return
+        }
+
+        await setProcessing(file, "gifsicle", step: 1, total: 1)
+        let tempOut = path + ".imagearm.gif"
+        defer { cleanupTemps(around: path) }
+
+        let origSize = fileSize(path)
+        var args = ["--optimize=\(level.gifOptimizeLevel)"]
+        if level.gifLossy { args.append("--lossy=\(level.gifLossyLevel)") }
+        if level.stripMetadata { args.append("--no-comments") }
+        args += [path, "--output", tempOut]
+
+        let result = await run(gifsicle, args: args)
+        guard result.exitCode == 0 else {
+            await setFailed(file, result.stderr.prefix(200).description)
+            return
+        }
+
+        let newSize = fileSize(tempOut)
+        if newSize < origSize && newSize > 0 {
+            await safeReplace(file: file, originalPath: path, optimizedPath: tempOut, originalSize: origSize, optimizedSize: newSize)
+        } else {
+            optiLog(String(localized: "\(file.url.lastPathComponent) : déjà optimal (\(formatBytes(origSize)))"), level: .info)
+            await MainActor.run { file.status = .alreadyOptimal }
+        }
+    }
+
+    // MARK: - TIFF
+
+    private func optimizeTIFF(file: ImageFile, level: OptimizationLevel) async {
+        let path = file.url.path
+        guard let tiffutil = toolManager.find("tiffutil") else {
+            optiLog("\(file.url.lastPathComponent) : tiffutil non disponible, ignoré", level: .info)
+            await MainActor.run { file.status = .alreadyOptimal }
+            return
+        }
+
+        await setProcessing(file, "tiffutil", step: 1, total: 1)
+        let ext = URL(fileURLWithPath: path).pathExtension.lowercased()
+        let tempOut = path + ".imagearm.\(ext)"
+        defer { cleanupTemps(around: path) }
+
+        let origSize = fileSize(path)
+        let result = await run(tiffutil, args: ["-lzw", path, "-out", tempOut])
+        guard result.exitCode == 0 else {
+            await setFailed(file, result.stderr.prefix(200).description)
+            return
+        }
+
+        let newSize = fileSize(tempOut)
+        if newSize < origSize && newSize > 0 {
+            await safeReplace(file: file, originalPath: path, optimizedPath: tempOut, originalSize: origSize, optimizedSize: newSize)
+        } else {
+            optiLog(String(localized: "\(file.url.lastPathComponent) : déjà optimal (\(formatBytes(origSize)))"), level: .info)
+            await MainActor.run { file.status = .alreadyOptimal }
+        }
+    }
+
+    // MARK: - AVIF
+
+    private func optimizeAVIF(file: ImageFile, level: OptimizationLevel) async {
+        let path = file.url.path
+        let tempPath = path + ".imagearm.tmp"
+        let total = actualAVIFSteps(level: level)
+        var step = 0
+        defer { cleanupTemps(around: path) }
+
+        guard copyFile(from: path, to: tempPath) else {
+            await setFailed(file, String(localized: "Erreur de copie"))
+            return
+        }
+
+        var bestPath = tempPath
+        var bestSize = fileSize(tempPath)
+
+        // --- Lossy AVIF encoding (GPU hardware, qualité configurable) ---
+        if level.avifLossy, let gpu = gpu {
+            step += 1
+            await setProcessing(file, "AVIF lossy", step: step, total: total)
+            let lossyOut = tempPath + ".imagearm.avif.lossy"
+            do {
+                try gpu.encodeAVIFHardware(
+                    inputPath: tempPath,
+                    outputPath: lossyOut,
+                    quality: level.avifQuality,
+                    stripMetadata: level.stripMetadata
+                )
+                bestPath = keepBest(&bestSize, candidate: lossyOut, current: bestPath, tempBase: tempPath)
+            } catch {
+                optiLog(String(localized: "AVIF lossy : \(error.localizedDescription)"), level: .warning)
+            }
+            cleanupIfNot(lossyOut, keep: bestPath)
+        }
+
+        guard !Task.isCancelled else {
+            await MainActor.run { file.status = .pending }
+            return
+        }
+
+        // --- Max quality AVIF encoding (GPU hardware, qualité = 100) ---
+        if let gpu = gpu {
+            step += 1
+            await setProcessing(file, "AVIF qualité max", step: step, total: total)
+            let maxOut = tempPath + ".imagearm.avif.max"
+            do {
+                try gpu.encodeAVIFMaxQuality(
+                    inputPath: tempPath,
+                    outputPath: maxOut,
+                    stripMetadata: level.stripMetadata
+                )
+                bestPath = keepBest(&bestSize, candidate: maxOut, current: bestPath, tempBase: tempPath)
+            } catch {
+                optiLog(String(localized: "AVIF qualité max : \(error.localizedDescription)"), level: .warning)
+            }
+            cleanupIfNot(maxOut, keep: bestPath)
+        }
+
+        await finalize(file: file, originalPath: path, bestPath: bestPath, bestSize: bestSize)
+    }
+
+    private func actualAVIFSteps(level: OptimizationLevel) -> Int {
+        var steps = 0
+        if gpu != nil {
+            if level.avifLossy { steps += 1 }
+            steps += 1  // max quality (always)
+        }
+        return max(steps, 1)
+    }
+
     // MARK: - SVG
 
     private func optimizeSVG(file: ImageFile, level: OptimizationLevel) async {
@@ -313,6 +453,7 @@ actor ImageOptimizer {
         if newSize < origSize && newSize > 0 {
             await safeReplace(file: file, originalPath: path, optimizedPath: tempOut, originalSize: origSize, optimizedSize: newSize)
         } else {
+            optiLog(String(localized: "\(file.url.lastPathComponent) : déjà optimal (\(formatBytes(origSize)))"), level: .info)
             await MainActor.run { file.status = .alreadyOptimal }
         }
     }
@@ -349,6 +490,7 @@ actor ImageOptimizer {
         if newSize < origSize && newSize > 0 {
             await safeReplace(file: file, originalPath: path, optimizedPath: tempOut, originalSize: origSize, optimizedSize: newSize)
         } else {
+            optiLog(String(localized: "\(file.url.lastPathComponent) : déjà optimal (\(formatBytes(origSize)))"), level: .info)
             await MainActor.run { file.status = .alreadyOptimal }
         }
     }

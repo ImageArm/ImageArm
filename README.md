@@ -39,7 +39,7 @@ ImageArm est gratuit et open source. Si il te fait gagner du temps, un café ☕
 
 ### Vos images sont trop lourdes. ImageArm les arme pour le web.
 
-ImageArm est une app macOS native qui **compresse vos images jusqu'a 80%** sans perte visible de qualite. Glissez vos fichiers, choisissez le niveau, c'est tout. L'app fait le reste en utilisant **7 outils de compression** qui rivalisent entre eux pour trouver le meilleur resultat — et votre **GPU Metal** pour aller encore plus loin.
+ImageArm est une app macOS native qui **compresse vos images jusqu'a 80%** sans perte visible de qualite. Glissez vos fichiers, choisissez le niveau, c'est tout. L'app fait le reste en utilisant **plusieurs outils de compression** qui rivalisent entre eux pour trouver le meilleur resultat — et votre **GPU Metal** pour aller encore plus loin.
 
 ### Formats supportes
 
@@ -47,7 +47,10 @@ ImageArm est une app macOS native qui **compresse vos images jusqu'a 80%** sans 
 |--------|----------------|-----------------|
 | **PNG** | pngquant + oxipng + pngcrush | Metal compute shader (quantization + dithering) |
 | **JPEG** | mozjpeg (jpegtran/cjpeg) | Apple Silicon hardware encoder |
-| **HEIF/HEIC** | Core Image | Apple Silicon hardware encoder |
+| **HEIF/HEIC** | ImageIO natif | Apple Silicon hardware encoder |
+| **GIF** | gifsicle (lossless + lossy optionnel) | — |
+| **TIFF** | tiffutil -lzw (intégré macOS) | — |
+| **AVIF** | ImageIO natif macOS 14+ | Apple Silicon hardware encoder |
 | **SVG** | svgo | — |
 | **WebP** | cwebp | — |
 
@@ -81,7 +84,7 @@ Chaque outil produit un resultat. **Le fichier le plus leger gagne.** Votre orig
 - **Mode headless** — `imagearm --headless *.png` pour vos scripts et CI
 - **Quick Action Finder** — Clic droit > Optimiser avec ImageArm
 - **Notification macOS** — Alerte quand le batch est termine
-- **Console de logs** — Suivez chaque etape du pipeline en temps reel
+- **Console de logs** — Suivez chaque etape du pipeline en temps reel, copiez tout en un clic
 - **Zero dependance runtime** — Les outils CLI sont installés via Homebrew/npm, détectés automatiquement
 - **Concurrent** — Traitement parallele via Swift `TaskGroup`
 - **WCAG AA** — Interface accessible
@@ -166,7 +169,7 @@ ImageArm
 
 ### Your images are too heavy. ImageArm arms them for the web.
 
-ImageArm is a native macOS app that **compresses your images up to 80%** with no visible quality loss. Drop your files, pick a level, done. The app does the rest using **7 compression tools** that compete against each other for the smallest output — and your **Metal GPU** to push even further.
+ImageArm is a native macOS app that **compresses your images up to 80%** with no visible quality loss. Drop your files, pick a level, done. The app does the rest using **multiple competing compression tools** for the smallest output — and your **Metal GPU** to push even further.
 
 ### Supported formats
 
@@ -174,7 +177,10 @@ ImageArm is a native macOS app that **compresses your images up to 80%** with no
 |--------|-----------|-----------------|
 | **PNG** | pngquant + oxipng + pngcrush | Metal compute shader (quantization + dithering) |
 | **JPEG** | mozjpeg (jpegtran/cjpeg) | Apple Silicon hardware encoder |
-| **HEIF/HEIC** | Core Image | Apple Silicon hardware encoder |
+| **HEIF/HEIC** | Native ImageIO | Apple Silicon hardware encoder |
+| **GIF** | gifsicle (lossless + optional lossy) | — |
+| **TIFF** | tiffutil -lzw (built-in macOS) | — |
+| **AVIF** | Native macOS 14+ ImageIO | Apple Silicon hardware encoder |
 | **SVG** | svgo | — |
 | **WebP** | cwebp | — |
 
@@ -208,7 +214,7 @@ Every tool produces a result. **The lightest file wins.** Your original is atomi
 - **Headless mode** — `imagearm --headless *.png` for scripts and CI
 - **Finder Quick Action** — Right-click > Optimize with ImageArm
 - **macOS notifications** — Get alerted when batch processing completes
-- **Live log console** — Watch every pipeline step in real time
+- **Live log console** — Watch every pipeline step in real time, copy all logs in one click
 - **Zero runtime dependencies** — CLI tools are installed via Homebrew/npm and auto-detected
 - **Concurrent** — Parallel processing via Swift `TaskGroup`
 - **WCAG AA** — Accessible interface

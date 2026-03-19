@@ -37,13 +37,16 @@ enum OptimizationStatus: Equatable {
 }
 
 enum ImageFormat: String, CaseIterable {
-    case png, jpeg, heif, svg, webp, unknown
+    case png, jpeg, heif, gif, tiff, avif, svg, webp, unknown
 
     static func detect(from url: URL) -> ImageFormat {
         switch url.pathExtension.lowercased() {
         case "png": return .png
         case "jpg", "jpeg": return .jpeg
         case "heic", "heif": return .heif
+        case "gif": return .gif
+        case "tiff", "tif": return .tiff
+        case "avif": return .avif
         case "svg": return .svg
         case "webp": return .webp
         default: return .unknown

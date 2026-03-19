@@ -1,0 +1,5 @@
+Outil : pngcrush
+Version : 1.8.1
+Licence : libpng license (BSD-like)
+URL source : https://github.com/Kjuly/pngcrush (fork), original: https://pmt.sourceforge.io/pngcrush/
+Copyright : Copyright (c) 1998-2014 Glenn Randers-Pehrson

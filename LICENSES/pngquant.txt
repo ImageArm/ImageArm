@@ -1,0 +1,5 @@
+Outil : pngquant
+Version : 3.0.3
+Licence : BSD 2-Clause (Simplified License)
+URL source : https://github.com/kornelski/pngquant
+Copyright : Copyright (c) by Kornel Lesinski and contributors. Based on code by Greg Roelofs and Jef Poskanzer.

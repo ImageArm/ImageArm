@@ -1,0 +1,18 @@
+[submodule "tools/submodules/svgo"]
+	path = tools/submodules/svgo
+	url = https://github.com/svg/svgo.git
+[submodule "tools/submodules/pngquant"]
+	path = tools/submodules/pngquant
+	url = https://github.com/kornelski/pngquant.git
+[submodule "tools/submodules/oxipng"]
+	path = tools/submodules/oxipng
+	url = https://github.com/shssoichiro/oxipng.git
+[submodule "tools/submodules/mozjpeg"]
+	path = tools/submodules/mozjpeg
+	url = https://github.com/mozilla/mozjpeg.git
+[submodule "tools/submodules/libwebp"]
+	path = tools/submodules/libwebp
+	url = https://github.com/webmproject/libwebp.git
+[submodule "tools/submodules/pngcrush"]
+	path = tools/submodules/pngcrush
+	url = https://github.com/Kjuly/pngcrush.git

@@ -1,0 +1,5 @@
+Outil : svgo
+Version : 4.0.1
+Licence : MIT
+URL source : https://github.com/svg/svgo
+Copyright : Copyright (c) Kir Belevich and contributors

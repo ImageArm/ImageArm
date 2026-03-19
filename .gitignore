@@ -1,0 +1,51 @@
+# Xcode
+*.xcuserdata/
+DerivedData/
+build/
+xcuserdata/
+
+# SPM (legacy)
+.build/
+Package.resolved
+
+# macOS
+.DS_Store
+
+# Bun temp files
+*.bun-build
+.*.bun-build
+
+# Outils compilés (tools/bin/)
+# Note : les binaires pré-compilés SERONT éventuellement commités (architecture.md)
+# Pour l'instant exclus — ajouter manuellement avec `git add -f tools/bin/{outil}` quand prêt
+tools/bin/*
+!tools/bin/.gitkeep
+
+# Build artifacts des submodules (non commités)
+tools/submodules/*/target/
+tools/submodules/*/build-arm64/
+tools/submodules/*/node_modules/
+tools/submodules/*/dist/
+
+# BMAD project management (internal)
+_bmad/
+_bmad-output/
+
+# Documentation (internal)
+docs/
+
+# Claude Code local config
+.claude/
+
+# GrepAI index
+.grepai/
+
+# Debug & security audit sessions
+debug/
+security/
+
+# Localizations WIP (ancien nom)
+PngOpti Localizations/
+
+# install-service (internal)
+install-service.sh

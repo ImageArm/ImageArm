@@ -1,0 +1,5 @@
+Outil : oxipng
+Version : 10.1.0
+Licence : MIT
+URL source : https://github.com/shssoichiro/oxipng
+Copyright : Copyright (c) Joshua Holmer and contributors

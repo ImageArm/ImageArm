@@ -1,0 +1,5 @@
+Outil : mozjpeg (cjpeg + jpegtran)
+Version : 4.1.5
+Licence : BSD 3-Clause (Modified BSD License) + IJG License
+URL source : https://github.com/mozilla/mozjpeg
+Copyright : Copyright (c) Mozilla Corporation, based on libjpeg-turbo by D. R. Commander and contributing authors, and on libjpeg by the Independent JPEG Group (IJG)

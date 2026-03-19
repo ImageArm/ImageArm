@@ -1,0 +1,60 @@
+name: ImageArm
+options:
+  bundleIdPrefix: com.imagearm
+  deploymentTarget:
+    macOS: "14.0"
+  xcodeVersion: "15.0"
+  knownRegions: [fr, en, de, nl, it]
+  developmentRegion: fr
+
+targets:
+  ImageArm:
+    type: application
+    platform: macOS
+    sources:
+      - Sources/ImageArm
+    settings:
+      base:
+        INFOPLIST_FILE: Info.plist
+        CODE_SIGN_ENTITLEMENTS: ImageArm.entitlements
+        CODE_SIGN_STYLE: Automatic
+        PRODUCT_BUNDLE_IDENTIFIER: com.imagearm.app
+        PRODUCT_NAME: ImageArm
+        SWIFT_VERSION: "5.9"
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        GENERATE_INFOPLIST_FILE: NO
+        MACOSX_DEPLOYMENT_TARGET: "14.0"
+        ENABLE_HARDENED_RUNTIME: YES
+    postCompileScripts:
+      - script: |
+          cp -f "$PROJECT_DIR/tools/bin/pngquant" "$BUILT_PRODUCTS_DIR/$EXECUTABLE_FOLDER_PATH/"
+          cp -f "$PROJECT_DIR/tools/bin/oxipng" "$BUILT_PRODUCTS_DIR/$EXECUTABLE_FOLDER_PATH/"
+          cp -f "$PROJECT_DIR/tools/bin/pngcrush" "$BUILT_PRODUCTS_DIR/$EXECUTABLE_FOLDER_PATH/"
+          cp -f "$PROJECT_DIR/tools/bin/cjpeg" "$BUILT_PRODUCTS_DIR/$EXECUTABLE_FOLDER_PATH/"
+          cp -f "$PROJECT_DIR/tools/bin/jpegtran" "$BUILT_PRODUCTS_DIR/$EXECUTABLE_FOLDER_PATH/"
+          cp -f "$PROJECT_DIR/tools/bin/svgo" "$BUILT_PRODUCTS_DIR/$EXECUTABLE_FOLDER_PATH/"
+          cp -f "$PROJECT_DIR/tools/bin/cwebp" "$BUILT_PRODUCTS_DIR/$EXECUTABLE_FOLDER_PATH/"
+        name: "Copier outils CLI dans Contents/MacOS/"
+        basedOnDependencyAnalysis: false
+    scheme:
+      testTargets:
+        - ImageArmTests
+      gatherCoverageData: false
+
+  ImageArmTests:
+    type: bundle.unit-test
+    platform: macOS
+    sources:
+      - Tests/ImageArmTests
+    resources:
+      - path: Tests/ImageArmTests/Resources
+        buildPhase: resources
+    dependencies:
+      - target: ImageArm
+    settings:
+      base:
+        SWIFT_VERSION: "5.9"
+        MACOSX_DEPLOYMENT_TARGET: "14.0"
+        GENERATE_INFOPLIST_FILE: YES
+        TEST_HOST: "$(BUILT_PRODUCTS_DIR)/ImageArm.app/Contents/MacOS/ImageArm"
+        BUNDLE_LOADER: "$(TEST_HOST)"

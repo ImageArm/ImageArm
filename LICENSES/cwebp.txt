@@ -1,0 +1,5 @@
+Outil : cwebp (libwebp)
+Version : 1.6.0
+Licence : BSD 3-Clause (Modified BSD License)
+URL source : https://github.com/webmproject/libwebp
+Copyright : Copyright (c) Google LLC. All rights reserved.

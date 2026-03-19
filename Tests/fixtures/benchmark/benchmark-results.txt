@@ -1,0 +1,11 @@
+Benchmark ImageArm — 2026-03-19 13:55:09
+Machine: Apple M4 Max
+macOS: 26.4
+========================================
+
+Task 2 (50 PNG Standard): 7.32s — PASS
+Task 3 (fichier unique headless): 0.90s — PASS
+Task 6 (mémoire 500 images): 83 Mo RSS max — PASS
+Task 7: ImageArm=3420Ko vs Homebrew=3420Ko — PASS
+Task 8 (cleanup après traitement normal): 0 fichiers temporaires — PASS (cleanup vérifié, annulation UI = test manuel)
+Task 9 (ré-optimisation): 627197 → 574059 → 574059 — PASS

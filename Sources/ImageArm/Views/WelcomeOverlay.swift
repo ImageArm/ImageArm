@@ -13,7 +13,7 @@ struct WelcomeOverlay: View {
                 .font(.title2)
                 .fontWeight(.semibold)
 
-            Text("Glissez vos images ou cliquez + pour commencer.\nImageArm optimise PNG, JPEG, HEIF, SVG et WebP.")
+            Text("Glissez vos images ou cliquez + pour commencer.\nImageArm optimise PNG, JPEG, HEIF, GIF, TIFF, AVIF, SVG et WebP.")
                 .font(.callout)
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)

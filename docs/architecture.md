@@ -1,10 +1,10 @@
-# Architecture — PngOpti
+# Architecture — ImageArm
 
-> Généré le 2026-03-11 | Scan exhaustif
+> Généré le 2026-03-19 | Scan exhaustif
 
 ## Résumé
 
-PngOpti est une application macOS native (SwiftUI, macOS 14+) qui optimise des images en lot via un pipeline multi-outils compétitif. L'application combine des outils CLI externes (pngquant, oxipng, mozjpeg, etc.) avec de l'accélération GPU Metal pour obtenir la meilleure compression possible. Zéro dépendance externe — uniquement les frameworks Apple.
+ImageArm est une application macOS native (SwiftUI, macOS 14+) qui optimise des images en lot via un pipeline multi-outils compétitif. L'application combine des outils CLI externes (pngquant, oxipng, mozjpeg, etc.) avec de l'accélération GPU Metal pour obtenir la meilleure compression possible. Zéro dépendance externe — uniquement les frameworks Apple.
 
 ## Stack technologique
 
@@ -15,7 +15,7 @@ PngOpti est une application macOS native (SwiftUI, macOS 14+) qui optimise des i
 | GPU | Metal (compute shaders) | System |
 | Traitement image | Core Image, ImageIO | System |
 | Concurrence | Swift Concurrency (async/await, Actor, TaskGroup) | Built-in |
-| Packaging | Xcode project (PngOpti.xcodeproj) via xcodegen (project.yml) | Single target |
+| Packaging | Xcode project (ImageArm.xcodeproj) via xcodegen (project.yml) | Single target |
 
 ## Pattern architectural
 
@@ -97,7 +97,7 @@ Pour chaque image, plusieurs outils s'exécutent séquentiellement. Chaque outil
 
 ### Gestion des fichiers temporaires
 
-- Pattern de nommage : `{original}.pngopti.{suffix}`
+- Pattern de nommage : `{original}.imagearm.{suffix}`
 - Suffixes : `.tmp`, `.gpu.png`, `.quant.png`, `.oxi.png`, `.crush.png`, `.adv.png`, `.jpegoptim.jpg`, `.moz.jpg`, etc.
 - Remplacement atomique : backup original → move optimisé → trash backup
 - Nettoyage systématique via `cleanupTemps(around:)` en `defer`
@@ -196,7 +196,7 @@ com.apple.security.device.gpu = true          # Accès Metal
 
 | Point d'entrée | Fichier | Description |
 |---|---|---|
-| Application | `PngOptiApp.swift` | `@main struct PngOptiApp: App` |
-| Open URL | `AppDelegate.application(_:open:)` | Gestion `open -a PngOpti fichier.png` |
-| CLI wrapper | `~/.local/bin/pngopti` | Script shell → `open -a PngOpti` |
-| Finder Action | `~/Library/Services/Optimiser avec PngOpti.workflow` | Quick Action Finder |
+| Application | `ImageArmApp.swift` | `@main struct ImageArmApp: App` |
+| Open URL | `AppDelegate.application(_:open:)` | Gestion `open -a ImageArm fichier.png` |
+| CLI wrapper | `~/.local/bin/imagearm` | Script shell → `open -a ImageArm` |
+| Finder Action | `~/Library/Services/Optimiser avec ImageArm.workflow` | Quick Action Finder |

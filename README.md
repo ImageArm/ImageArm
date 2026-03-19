@@ -88,6 +88,7 @@ Chaque outil produit un resultat. **Le fichier le plus leger gagne.** Votre orig
 - **Zero dependance runtime** — Les outils CLI sont installés via Homebrew/npm, détectés automatiquement
 - **Concurrent** — Traitement parallele via Swift `TaskGroup`
 - **WCAG AA** — Interface accessible
+- **Multi-langue** — Interface disponible en français, anglais, allemand, néerlandais et italien. Anglais par défaut si votre langue n'est pas supportée.
 
 ### Installation
 
@@ -218,6 +219,7 @@ Every tool produces a result. **The lightest file wins.** Your original is atomi
 - **Zero runtime dependencies** — CLI tools are installed via Homebrew/npm and auto-detected
 - **Concurrent** — Parallel processing via Swift `TaskGroup`
 - **WCAG AA** — Accessible interface
+- **Multi-language** — Interface available in French, English, German, Dutch and Italian. Defaults to English for unsupported languages.
 
 ### Installation
 

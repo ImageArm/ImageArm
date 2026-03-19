@@ -17,7 +17,7 @@ struct DropZoneView: View {
                 .font(.subheadline)
                 .foregroundStyle(.tertiary)
 
-            Text("PNG · JPEG · HEIF · SVG · WebP")
+            Text("PNG · JPEG · HEIF · GIF · TIFF · AVIF · SVG · WebP")
                 .font(.caption)
                 .foregroundStyle(.tertiary)
                 .padding(.top, 4)

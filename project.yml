@@ -5,7 +5,7 @@ options:
     macOS: "14.0"
   xcodeVersion: "15.0"
   knownRegions: [fr, en, de, nl, it]
-  developmentRegion: fr
+  developmentRegion: en
 
 targets:
   ImageArm:

@@ -1,6 +1,6 @@
-# Vue d'ensemble du projet — PngOpti
+# Vue d'ensemble du projet — ImageArm
 
-> Généré le 2026-03-11 | Scan exhaustif
+> Généré le 2026-03-19 | Scan exhaustif
 
 ## Description
 
@@ -17,7 +17,7 @@ ImageArm est une application macOS native (SwiftUI) qui optimise des images en l
 | **Dépendances** | Zéro (frameworks Apple uniquement) |
 | **GPU** | Metal compute shaders + hardware JPEG encoder |
 | **Outils CLI** | pngquant, oxipng, pngcrush, mozjpeg, gifsicle, svgo, cwebp, tiffutil (macOS natif) |
-| **Packaging** | Xcode project (PngOpti.xcodeproj) → Archive/Export → .app bundle |
+| **Packaging** | Xcode project (ImageArm.xcodeproj) → Archive/Export → .app bundle |
 
 ## Fonctionnalités principales
 
@@ -36,18 +36,18 @@ ImageArm est une application macOS native (SwiftUI) qui optimise des images en l
 
 | Répertoire/Fichier | Rôle |
 |---|---|
-| `Sources/PngOpti/` | Code source Swift (16 fichiers) |
-| `Sources/PngOpti/Models/` | Modèles de données et état (5 fichiers) |
-| `Sources/PngOpti/Services/` | Logique métier : optimizer, GPU, tool manager (3 fichiers) |
-| `Sources/PngOpti/Views/` | Interface SwiftUI (6 fichiers) |
-| `Sources/PngOpti/Utils/` | Utilitaires (1 fichier) |
-| `project.yml` | Configuration xcodegen (génère PngOpti.xcodeproj) |
-| `PngOpti.xcodeproj` | Projet Xcode (généré par xcodegen) |
+| `Sources/ImageArm/` | Code source Swift (16 fichiers) |
+| `Sources/ImageArm/Models/` | Modèles de données et état (5 fichiers) |
+| `Sources/ImageArm/Services/` | Logique métier : optimizer, GPU, tool manager (3 fichiers) |
+| `Sources/ImageArm/Views/` | Interface SwiftUI (6 fichiers) |
+| `Sources/ImageArm/Utils/` | Utilitaires (1 fichier) |
+| `project.yml` | Configuration xcodegen (génère ImageArm.xcodeproj) |
+| `ImageArm.xcodeproj` | Projet Xcode (généré par xcodegen) |
 | `Info.plist` | Info.plist de l'application (racine du projet) |
-| `PngOpti.entitlements` | Entitlements macOS (pas de sandbox, GPU) |
+| `ImageArm.entitlements` | Entitlements macOS (pas de sandbox, GPU) |
 | `install-service.sh` | Installation Finder Quick Action + CLI |
 | `install-finder-action.sh` | Installation service Automator |
-| `Sources/PngOpti/Assets.xcassets/` | Ressources (icônes, assets) |
+| `Sources/ImageArm/Assets.xcassets/` | Ressources (icônes, assets) |
 
 ## Liens vers la documentation détaillée
 

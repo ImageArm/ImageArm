@@ -2,7 +2,6 @@
   "sourceLanguage" : "fr",
   "strings" : {
     "  meilleur résultat : %@ (vs %@)" : {
-      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -37,7 +36,6 @@
 
     },
     "%@ : déjà optimal (%@)" : {
-      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -95,7 +93,6 @@
 
     },
     "%lld en cours" : {
-      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -124,7 +121,6 @@
       }
     },
     "%lld fichiers" : {
-      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -153,7 +149,6 @@
       }
     },
     "%lld lignes" : {
-      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -182,7 +177,6 @@
       }
     },
     "%lld/%lld fichiers" : {
-      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -211,7 +205,6 @@
       }
     },
     "~1s/image" : {
-      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -240,7 +233,6 @@
       }
     },
     "~3s/image" : {
-      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -269,7 +261,6 @@
       }
     },
     "~8s/image" : {
-      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -298,7 +289,6 @@
       }
     },
     "~20s/image" : {
-      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -339,7 +329,6 @@
 
     },
     "Afficher dans le Finder" : {
-      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -368,7 +357,6 @@
       }
     },
     "Afficher/masquer la console" : {
-      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -397,7 +385,6 @@
       }
     },
     "Ajouter" : {
-      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -426,7 +413,6 @@
       }
     },
     "Ajouter des images à optimiser" : {
-      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -455,7 +441,6 @@
       }
     },
     "Ajouter des images…" : {
-      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -484,7 +469,6 @@
       }
     },
     "Arrêter l'optimisation en cours" : {
-      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -513,7 +497,6 @@
       }
     },
     "Bon équilibre vitesse/compression. Recommandé pour la plupart des usages." : {
-      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -542,7 +525,6 @@
       }
     },
     "Compression extrême, GPU Metal + toutes les passes CPU. Chaque octet compte." : {
-      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -571,7 +553,6 @@
       }
     },
     "Compression maximale + GPU Metal. Idéal pour la production web." : {
-      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -600,7 +581,6 @@
       }
     },
     "Conservation des métadonnées" : {
-      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -657,7 +637,6 @@
       }
     },
     "Copier install" : {
-      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -742,7 +721,6 @@
       }
     },
     "ERREUR" : {
-      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -771,7 +749,6 @@
       }
     },
     "Erreur de copie" : {
-      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -800,7 +777,6 @@
       }
     },
     "Erreur remplacement" : {
-      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -829,7 +805,6 @@
       }
     },
     "Format non supporté" : {
-      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -858,7 +833,6 @@
       }
     },
     "Gain" : {
-      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -917,30 +891,30 @@
         }
       }
     },
-    "Installer tous : brew install pngquant oxipng pngcrush advancecomp jpegoptim mozjpeg gifsicle webp" : {
+    "Installer tous : brew install pngquant oxipng pngcrush mozjpeg gifsicle svgo webp" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Alle installieren: brew install pngquant oxipng pngcrush advancecomp jpegoptim mozjpeg gifsicle webp"
+            "value" : "Alle installieren: brew install pngquant oxipng pngcrush mozjpeg gifsicle svgo webp"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Install all: brew install pngquant oxipng pngcrush advancecomp jpegoptim mozjpeg gifsicle webp"
+            "value" : "Install all: brew install pngquant oxipng pngcrush mozjpeg gifsicle svgo webp"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Installa tutto: brew install pngquant oxipng pngcrush advancecomp jpegoptim mozjpeg gifsicle webp"
+            "value" : "Installa tutto: brew install pngquant oxipng pngcrush mozjpeg gifsicle svgo webp"
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Alles installeren: brew install pngquant oxipng pngcrush advancecomp jpegoptim mozjpeg gifsicle webp"
+            "value" : "Alles installeren: brew install pngquant oxipng pngcrush mozjpeg gifsicle svgo webp"
           }
         }
       }
@@ -949,7 +923,6 @@
 
     },
     "JPEG : compression avec perte" : {
-      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -978,7 +951,6 @@
       }
     },
     "Lancer l'optimisation (⌘↩)" : {
-      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1007,7 +979,6 @@
       }
     },
     "Maximum" : {
-      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1064,7 +1035,6 @@
       }
     },
     "Metal GPU JPEG : %@" : {
-      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1093,7 +1063,6 @@
       }
     },
     "Metal GPU quantize : %@" : {
-      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1122,7 +1091,6 @@
       }
     },
     "Niveau" : {
-      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1179,7 +1147,6 @@
       }
     },
     "Nom" : {
-      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1236,7 +1203,6 @@
       }
     },
     "Optimisation" : {
-      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1265,7 +1231,6 @@
       }
     },
     "Optimisation rapide, lossless uniquement. Idéal pour le développement." : {
-      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1294,7 +1259,6 @@
       }
     },
     "Optimisations simultanées" : {
-      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1323,7 +1287,6 @@
       }
     },
     "Optimisé" : {
-      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1352,7 +1315,6 @@
       }
     },
     "Optimiser" : {
-      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1381,7 +1343,6 @@
       }
     },
     "Original" : {
-      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1438,7 +1399,6 @@
       }
     },
     "Outils" : {
-      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1495,7 +1455,6 @@
       }
     },
     "Ouverture: %lld fichier(s)" : {
-      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1524,7 +1483,6 @@
       }
     },
     "Performance" : {
-      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1556,7 +1514,6 @@
 
     },
     "PNG : compression avec perte" : {
-      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1584,11 +1541,7 @@
         }
       }
     },
-    "PNG · JPEG · GIF · SVG · WebP" : {
-
-    },
     "Progression" : {
-      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1645,7 +1598,6 @@
       }
     },
     "Qualité personnalisée" : {
-      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1702,7 +1654,6 @@
       }
     },
     "Rapide" : {
-      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1731,7 +1682,6 @@
       }
     },
     "Ré-optimiser" : {
-      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1760,7 +1710,6 @@
       }
     },
     "Standard" : {
-      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1789,7 +1738,6 @@
       }
     },
     "Stop" : {
-      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1818,7 +1766,6 @@
       }
     },
     "Suppression EXIF, commentaires, profils" : {
-      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1847,7 +1794,6 @@
       }
     },
     "Supprimer" : {
-      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1876,7 +1822,6 @@
       }
     },
     "Traitement terminé" : {
-      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1905,7 +1850,6 @@
       }
     },
     "Ultra" : {
-      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1934,7 +1878,6 @@
       }
     },
     "Utiliser des réglages manuels (ignorer le niveau)" : {
-      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1963,7 +1906,6 @@
       }
     },
     "Vider" : {
-      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1991,8 +1933,35 @@
         }
       }
     },
+    "Voir les licences" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lizenzen anzeigen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "View licenses"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Visualizza licenze"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Licenties bekijken"
+          }
+        }
+      }
+    },
     "Vider la liste des images" : {
-      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -2016,6 +1985,622 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Afbeeldingenlijst wissen"
+          }
+        }
+      }
+    },
+    "(compression extrême)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "(extreme Kompression)"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "(extreme compression)"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "(compressione estrema)"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "(extreme compressie)"
+          }
+        }
+      }
+    },
+    "(compression max)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "(max. Kompression)"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "(max compression)"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "(compressione max)"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "(max. compressie)"
+          }
+        }
+      }
+    },
+    "(sans perte)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "(verlustfrei)"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "(lossless)"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "(senza perdita)"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "(verliesvrij)"
+          }
+        }
+      }
+    },
+    "AVIF lossy : %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AVIF verlustbehaftet: %@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AVIF lossy: %@"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AVIF lossy: %@"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AVIF lossy: %@"
+          }
+        }
+      }
+    },
+    "AVIF qualité max : %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AVIF max. Qualität: %@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AVIF max quality: %@"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AVIF qualità max: %@"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AVIF max. kwaliteit: %@"
+          }
+        }
+      }
+    },
+    "Bienvenue dans ImageArm" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Willkommen bei ImageArm"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Welcome to ImageArm"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Benvenuto in ImageArm"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Welkom bij ImageArm"
+          }
+        }
+      }
+    },
+    "Commencer" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Loslegen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Get started"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inizia"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aan de slag"
+          }
+        }
+      }
+    },
+    "Copier" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kopieren"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copy"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copia"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kopiëren"
+          }
+        }
+      }
+    },
+    "Copier le résumé dans le presse-papiers" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zusammenfassung in Zwischenablage kopieren"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copy summary to clipboard"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copia il riepilogo negli appunti"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Samenvatting naar klembord kopiëren"
+          }
+        }
+      }
+    },
+    "ERREUR restauration backup" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "FEHLER beim Wiederherstellen des Backups"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ERROR restoring backup"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ERRORE ripristino backup"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "FOUT bij herstellen back-up"
+          }
+        }
+      }
+    },
+    "Faire un don ♥" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spenden ♥"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Make a donation ♥"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fai una donazione ♥"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Doneer ♥"
+          }
+        }
+      }
+    },
+    "Glissez vos images ou cliquez + pour commencer.\nImageArm optimise PNG, JPEG, HEIF, GIF, TIFF, AVIF, SVG et WebP." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bilder hier ablegen oder + klicken.\nImageArm optimiert PNG, JPEG, HEIF, GIF, TIFF, AVIF, SVG und WebP."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Drop your images or click + to start.\nImageArm optimizes PNG, JPEG, HEIF, GIF, TIFF, AVIF, SVG and WebP."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trascina le immagini o clicca + per iniziare.\nImageArm ottimizza PNG, JPEG, HEIF, GIF, TIFF, AVIF, SVG e WebP."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sleep afbeeldingen of klik + om te starten.\nImageArm optimaliseert PNG, JPEG, HEIF, GIF, TIFF, AVIF, SVG en WebP."
+          }
+        }
+      }
+    },
+    "HEIF lossy : %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "HEIF verlustbehaftet: %@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "HEIF lossy: %@"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "HEIF lossy: %@"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "HEIF lossy: %@"
+          }
+        }
+      }
+    },
+    "HEIF qualité max : %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "HEIF max. Qualität: %@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "HEIF max quality: %@"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "HEIF qualità max: %@"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "HEIF max. kwaliteit: %@"
+          }
+        }
+      }
+    },
+    "Les outils CLI sont embarqués dans l'application." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CLI-Tools sind in der App enthalten."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CLI tools are bundled within the application."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gli strumenti CLI sono inclusi nell'applicazione."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CLI-tools zijn meegeleverd in de applicatie."
+          }
+        }
+      }
+    },
+    "Merci d'utiliser ImageArm ♥" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Danke, dass du ImageArm nutzt ♥"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Thanks for using ImageArm ♥"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Grazie per usare ImageArm ♥"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bedankt voor het gebruik van ImageArm ♥"
+          }
+        }
+      }
+    },
+    "Merci ♥" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Danke ♥"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Thanks ♥"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Grazie ♥"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bedankt ♥"
+          }
+        }
+      }
+    },
+    "PNG · JPEG · HEIF · GIF · TIFF · AVIF · SVG · WebP" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "PNG · JPEG · HEIF · GIF · TIFF · AVIF · SVG · WebP"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "PNG · JPEG · HEIF · GIF · TIFF · AVIF · SVG · WebP"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "PNG · JPEG · HEIF · GIF · TIFF · AVIF · SVG · WebP"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "PNG · JPEG · HEIF · GIF · TIFF · AVIF · SVG · WebP"
+          }
+        }
+      }
+    },
+    "Plus tard" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Später"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Later"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Più tardi"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Later"
+          }
+        }
+      }
+    },
+    "Soutenir" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unterstützen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Support"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Supporta"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Steunen"
+          }
+        }
+      }
+    },
+    "Soutenir ImageArm sur Ko-fi" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ImageArm auf Ko-fi unterstützen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Support ImageArm on Ko-fi"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Supporta ImageArm su Ko-fi"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ImageArm steunen via Ko-fi"
+          }
+        }
+      }
+    },
+    "Tu viens d'optimiser %lld image%@ pour %@ économisés. Si ImageArm te fait gagner du temps, un petit don sur Ko-fi nous aide beaucoup !" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Du hast gerade %lld Bild%@ optimiert und %@ gespart. Wenn ImageArm dir Zeit spart, hilft eine kleine Spende auf Ko-fi sehr!"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You just optimized %lld image%@ saving %@. If ImageArm saves you time, a small donation on Ko-fi helps a lot!"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hai appena ottimizzato %lld immagine%@ risparmiando %@. Se ImageArm ti fa risparmiare tempo, una piccola donazione su Ko-fi aiuta molto!"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Je hebt zojuist %lld afbeelding%@ geoptimaliseerd en %@ bespaard. Als ImageArm je tijd bespaart, helpt een kleine donatie op Ko-fi enorm!"
           }
         }
       }

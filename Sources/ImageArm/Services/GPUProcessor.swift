@@ -86,16 +86,18 @@ final class GPUProcessor: @unchecked Sendable {
         let bytesPerRow = 4 * width
         var pixelData = [UInt8](repeating: 0, count: bytesPerRow * height)
         let colorSpace = CGColorSpaceCreateDeviceRGB()
-        guard let context = CGContext(
-            data: &pixelData,
-            width: width,
-            height: height,
-            bitsPerComponent: 8,
-            bytesPerRow: bytesPerRow,
-            space: colorSpace,
-            bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue
-        ) else { throw GPUError.processingFailed }
-        context.draw(cgImage, in: CGRect(x: 0, y: 0, width: width, height: height))
+        try pixelData.withUnsafeMutableBytes { ptr in
+            guard let context = CGContext(
+                data: ptr.baseAddress,
+                width: width,
+                height: height,
+                bitsPerComponent: 8,
+                bytesPerRow: bytesPerRow,
+                space: colorSpace,
+                bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue
+            ) else { throw GPUError.processingFailed }
+            context.draw(cgImage, in: CGRect(x: 0, y: 0, width: width, height: height))
+        }
 
         inputTexture.replace(
             region: MTLRegionMake2D(0, 0, width, height),
@@ -163,16 +165,22 @@ final class GPUProcessor: @unchecked Sendable {
         )
 
         // Write PNG with ImageIO
-        guard let outContext = CGContext(
-            data: &outputData,
-            width: width,
-            height: height,
-            bitsPerComponent: 8,
-            bytesPerRow: bytesPerRow,
-            space: colorSpace,
-            bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue
-        ),
-        let outImage = outContext.makeImage() else {
+        // Utilise withUnsafeMutableBytes pour épingler le buffer pendant toute la durée de
+        // makeImage() — sans ça, Swift peut libérer le storage de outputData après l'appel
+        // CGContext(data:&outputData,...), causant un use-after-free dans memmove.
+        let outImage: CGImage? = outputData.withUnsafeMutableBytes { ptr in
+            guard let outContext = CGContext(
+                data: ptr.baseAddress,
+                width: width,
+                height: height,
+                bitsPerComponent: 8,
+                bytesPerRow: bytesPerRow,
+                space: colorSpace,
+                bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue
+            ) else { return nil }
+            return outContext.makeImage()
+        }
+        guard let outImage else {
             throw GPUError.processingFailed
         }
 

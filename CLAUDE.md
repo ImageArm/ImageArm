@@ -53,6 +53,25 @@ pngquant, oxipng, pngcrush, mozjpeg, gifsicle, svgo, cwebp (webp). `tiffutil` es
 
 `GPUProcessor` compiles Metal shaders at runtime (inline source string). Used only at `high`/`ultra` optimization levels. PNG uses Bayer+blue noise dithering compute shader; JPEG uses Apple Silicon hardware encoder via `CGImageDestination`.
 
+## Distribution Homebrew
+
+L'app est distribuée via un tap Homebrew personnalisé : **[ImageArm/homebrew-tap](https://github.com/ImageArm/homebrew-tap)**
+
+Installation pour les utilisateurs :
+```bash
+brew install --cask imagearm/tap/imagearm
+```
+
+### Après chaque nouvelle release GitHub
+
+Mettre à jour le cask avec le script dédié :
+```bash
+bash tools/scripts/update-homebrew-tap.sh          # auto : dernière release
+bash tools/scripts/update-homebrew-tap.sh 1.3.0    # version explicite
+```
+
+Ce script récupère automatiquement le sha256 du DMG depuis les assets GitHub et push le cask mis à jour. **À lancer systématiquement après chaque `gh release create`.**
+
 ## Conventions
 
 - UI strings and log messages are in **French**

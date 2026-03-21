@@ -124,7 +124,7 @@ cat > "$WORKFLOW_DIR/Contents/document.wflow" << WFLOW
                 <key>ActionParameters</key>
                 <dict>
                     <key>COMMAND_STRING</key>
-                    <string>"$APP_BUNDLE/Contents/MacOS/ImageArm" --headless "\$@"</string>
+                    <string>open -a "$APP_BUNDLE" "\$@"</string>
                     <key>CheckedForUserDefaultShell</key>
                     <true/>
                     <key>inputMethod</key>

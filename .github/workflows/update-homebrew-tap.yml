@@ -1,0 +1,58 @@
+name: Update Homebrew Tap
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  update-tap:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Extraire la version et le sha256
+        id: info
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TAG="${{ github.event.release.tag_name }}"
+          VERSION="${TAG#v}"
+
+          # Récupérer le sha256 du DMG depuis les assets de la release
+          SHA256=$(gh release view "$TAG" \
+            --repo "${{ github.repository }}" \
+            --json assets \
+            --jq '.assets[] | select(.name | endswith(".dmg")) | .digest' \
+            | sed 's/sha256://')
+
+          if [ -z "$SHA256" ]; then
+            echo "❌ sha256 introuvable — vérifier que le DMG est attaché à la release."
+            exit 1
+          fi
+
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "sha256=$SHA256"   >> "$GITHUB_OUTPUT"
+          echo "✅ Version : $VERSION"
+          echo "✅ sha256  : $SHA256"
+
+      - name: Mettre à jour le cask homebrew-tap
+        env:
+          TAP_TOKEN: ${{ secrets.HOMEBREW_TAP_TOKEN }}
+        run: |
+          VERSION="${{ steps.info.outputs.version }}"
+          SHA256="${{ steps.info.outputs.sha256 }}"
+          TAG="v$VERSION"
+
+          git clone "https://x-access-token:${TAP_TOKEN}@github.com/ImageArm/homebrew-tap.git" tap
+          cd tap
+
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          sed -i "s/version \"[^\"]*\"/version \"${VERSION}\"/" Casks/imagearm.rb
+          sed -i "s/sha256 \"[^\"]*\"/sha256 \"${SHA256}\"/"   Casks/imagearm.rb
+
+          git diff
+          git add Casks/imagearm.rb
+          git commit -m "Update imagearm cask → ${VERSION}"
+          git push origin main
+
+          echo "✅ Tap mis à jour : https://github.com/ImageArm/homebrew-tap"

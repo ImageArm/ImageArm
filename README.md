@@ -14,6 +14,7 @@
   <img src="https://img.shields.io/badge/Swift-5.9-orange?logo=swift" alt="Swift 5.9">
   <img src="https://img.shields.io/badge/GPU-Metal-purple" alt="Metal GPU">
   <img src="https://img.shields.io/badge/license-MIT-green" alt="MIT License">
+  <a href="https://github.com/ImageArm/homebrew-tap"><img src="https://img.shields.io/badge/Homebrew-Cask-FBB040?logo=homebrew&logoColor=white" alt="Homebrew Cask"></a>
   <a href="https://ko-fi.com/imagearm"><img src="https://img.shields.io/badge/Soutenir-Ko--fi-FF5E5B?logo=kofi&logoColor=white" alt="Ko-fi"></a>
 </p>
 
@@ -92,11 +93,23 @@ Chaque outil produit un resultat. **Le fichier le plus leger gagne.** Votre orig
 
 ### Installation
 
+#### Via Homebrew (recommandé)
+
+```bash
+brew install --cask imagearm/tap/imagearm
+```
+
+Pour mettre à jour :
+
+```bash
+brew upgrade --cask imagearm
+```
+
 #### Depuis les sources
 
 ```bash
 # Cloner le repo
-git clone https://github.com/madjuju/ImageArm.git
+git clone https://github.com/ImageArm/ImageArm.git
 cd ImageArm
 
 # Compiler les outils CLI embarques (necessite Rust, Bun, CMake)
@@ -223,11 +236,23 @@ Every tool produces a result. **The lightest file wins.** Your original is atomi
 
 ### Installation
 
+#### Via Homebrew (recommended)
+
+```bash
+brew install --cask imagearm/tap/imagearm
+```
+
+To update:
+
+```bash
+brew upgrade --cask imagearm
+```
+
 #### From source
 
 ```bash
 # Clone the repo
-git clone https://github.com/madjuju/ImageArm.git
+git clone https://github.com/ImageArm/ImageArm.git
 cd ImageArm
 
 # Build the embedded CLI tools (requires Rust, Bun, CMake)

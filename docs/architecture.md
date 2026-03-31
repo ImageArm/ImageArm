@@ -1,6 +1,6 @@
 # Architecture — ImageArm
 
-> Généré le 2026-03-19 | Scan exhaustif
+> Mis à jour le 2026-03-31
 
 ## Résumé
 
@@ -98,7 +98,7 @@ Pour chaque image, plusieurs outils s'exécutent séquentiellement. Chaque outil
 ### Gestion des fichiers temporaires
 
 - Pattern de nommage : `{original}.imagearm.{suffix}`
-- Suffixes : `.tmp`, `.gpu.png`, `.quant.png`, `.oxi.png`, `.crush.png`, `.adv.png`, `.jpegoptim.jpg`, `.moz.jpg`, etc.
+- Suffixes : `.tmp`, `.gpu.png`, `.quant.png`, `.oxi.png`, `.crush.png`, `.moz.jpg`, etc.
 - Remplacement atomique : backup original → move optimisé → trash backup
 - Nettoyage systématique via `cleanupTemps(around:)` en `defer`
 
@@ -172,16 +172,16 @@ while index < pending.count {
 5. `/usr/local/opt/mozjpeg/bin` (mozjpeg keg-only Intel)
 6. Fallback : `which` via Process
 
-**Outils supportés** : pngquant, oxipng, pngcrush, jpegtran (mozjpeg), gifsicle, svgo, cwebp, tiffutil (macOS natif). HEIF et AVIF utilisent ImageIO natif via GPUProcessor.
+**Outils supportés** : pngquant, oxipng, pngcrush, cjpeg/jpegtran (mozjpeg), gifsicle, svgo, cwebp, tiffutil (macOS natif). HEIF et AVIF utilisent ImageIO natif via GPUProcessor. Les outils sont embarqués dans le .app bundle (compilés via `tools/Makefile`) et détectés aussi dans Homebrew/système en fallback.
 
 ## Niveaux d'optimisation
 
 | Niveau | GPU | PNG lossy | JPEG lossy | Outils PNG | Outils JPEG | Temps estimé |
 |---|---|---|---|---|---|---|
-| Rapide | Non | Non | Non | oxipng -o2 | jpegoptim + mozjpeg | ~1s/image |
-| Standard | Non | Non | Non | oxipng -o4 + advpng | jpegoptim + mozjpeg | ~3s/image |
-| Maximum | Oui | Oui | Oui | GPU + pngquant + oxipng -o6 + pngcrush + advpng | GPU HW + jpegoptim + mozjpeg | ~8s/image |
-| Ultra | Oui | Oui | Oui | GPU + pngquant + oxipng -o6 + pngcrush brute + advpng | GPU HW + jpegoptim + mozjpeg | ~20s/image |
+| Rapide | Non | Non | Non | oxipng -o2 | mozjpeg (jpegtran) | ~1s/image |
+| Standard | Non | Non | Non | oxipng -o4 | mozjpeg (jpegtran) | ~3s/image |
+| Maximum | Oui | Oui | Oui | GPU + pngquant + oxipng -o6 + pngcrush | GPU HW + mozjpeg | ~8s/image |
+| Ultra | Oui | Oui | Oui | GPU + pngquant + oxipng -o6 + pngcrush brute | GPU HW + mozjpeg | ~20s/image |
 
 ## Entitlements
 

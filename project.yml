@@ -29,7 +29,6 @@ targets:
       - script: |
           cp -f "$PROJECT_DIR/tools/bin/pngquant" "$BUILT_PRODUCTS_DIR/$EXECUTABLE_FOLDER_PATH/"
           cp -f "$PROJECT_DIR/tools/bin/oxipng" "$BUILT_PRODUCTS_DIR/$EXECUTABLE_FOLDER_PATH/"
-          cp -f "$PROJECT_DIR/tools/bin/pngcrush" "$BUILT_PRODUCTS_DIR/$EXECUTABLE_FOLDER_PATH/"
           cp -f "$PROJECT_DIR/tools/bin/cjpeg" "$BUILT_PRODUCTS_DIR/$EXECUTABLE_FOLDER_PATH/"
           cp -f "$PROJECT_DIR/tools/bin/jpegtran" "$BUILT_PRODUCTS_DIR/$EXECUTABLE_FOLDER_PATH/"
           cp -f "$PROJECT_DIR/tools/bin/svgo" "$BUILT_PRODUCTS_DIR/$EXECUTABLE_FOLDER_PATH/"

@@ -41,7 +41,7 @@ final class ToolManager: Sendable {
     // MARK: - Init
 
     init() {
-        let names = ["pngquant", "oxipng", "pngcrush",
+        let names = ["pngquant", "oxipng",
                      "cjpeg", "jpegtran", "svgo", "cwebp",
                      "gifsicle", "tiffutil"]
         var cache: [String: String] = [:]
@@ -72,7 +72,6 @@ final class ToolManager: Sendable {
         [
             ToolInfo(name: "pngquant",        path: find("pngquant"),  installCommand: "brew install pngquant"),
             ToolInfo(name: "oxipng",           path: find("oxipng"),    installCommand: "brew install oxipng"),
-            ToolInfo(name: "pngcrush",         path: find("pngcrush"),  installCommand: "brew install pngcrush"),
             ToolInfo(name: "cjpeg (mozjpeg)",  path: find("cjpeg"),     installCommand: "brew install mozjpeg"),
             ToolInfo(name: "jpegtran (mozjpeg)", path: find("jpegtran"), installCommand: "brew install mozjpeg"),
             ToolInfo(name: "svgo",             path: find("svgo"),      installCommand: "npm install -g svgo"),

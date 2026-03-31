@@ -891,30 +891,30 @@
         }
       }
     },
-    "Installer tous : brew install pngquant oxipng pngcrush mozjpeg gifsicle svgo webp" : {
+    "Installer tous : brew install pngquant oxipng mozjpeg gifsicle svgo webp" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Alle installieren: brew install pngquant oxipng pngcrush mozjpeg gifsicle svgo webp"
+            "value" : "Alle installieren: brew install pngquant oxipng mozjpeg gifsicle svgo webp"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Install all: brew install pngquant oxipng pngcrush mozjpeg gifsicle svgo webp"
+            "value" : "Install all: brew install pngquant oxipng mozjpeg gifsicle svgo webp"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Installa tutto: brew install pngquant oxipng pngcrush mozjpeg gifsicle svgo webp"
+            "value" : "Installa tutto: brew install pngquant oxipng mozjpeg gifsicle svgo webp"
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Alles installeren: brew install pngquant oxipng pngcrush mozjpeg gifsicle svgo webp"
+            "value" : "Alles installeren: brew install pngquant oxipng mozjpeg gifsicle svgo webp"
           }
         }
       }

@@ -32,10 +32,8 @@ actor ImageOptimizer {
     private func actualPNGSteps(level: OptimizationLevel, overrides: QualityOverrides) -> Int {
         let pngIsLossy = overrides.effectivePNGLossy(level: level)
         var steps = 0
-        if pngIsLossy && gpu != nil { steps += 1 }
         if pngIsLossy && toolManager.find("pngquant") != nil { steps += 1 }
         if toolManager.find("oxipng") != nil { steps += 1 }
-        if level.usePngcrush && toolManager.find("pngcrush") != nil { steps += 1 }
         return max(steps, 1)
     }
 
@@ -66,26 +64,8 @@ actor ImageOptimizer {
         let pngIsLossy = overrides.effectivePNGLossy(level: level)
         let pngQRange = overrides.effectivePNGQualityRange(level: level)
 
-        // --- GPU quantization (Metal compute shader) ---
-        if pngIsLossy, let gpu = gpu {
-            step += 1
-            await setProcessing(file, "Metal GPU", step: step, total: total)
-            let gpuOut = tempPath + ".gpu.png"
-            do {
-                try gpu.quantizePNG(inputPath: tempPath, outputPath: gpuOut, quality: pngQRange.max)
-                bestPath = keepBest(&bestSize, candidate: gpuOut, current: bestPath, tempBase: tempPath)
-            } catch {
-                optiLog(String(localized: "Metal GPU quantize : \(error.localizedDescription)"), level: .warning)
-            }
-            cleanupIfNot(gpuOut, keep: bestPath)
-        }
-
-        guard !Task.isCancelled else {
-            await MainActor.run { file.status = .pending }
-            return
-        }
-
-        // --- pngquant (lossy quantization, compete with GPU result) ---
+        // --- pngquant (lossy quantization) ---
+        // Benchmark 2026-03-31: GPU Metal PNG retiré (0/50 victoires, +68% taille)
         if pngIsLossy, let pngquant = toolManager.find("pngquant") {
             step += 1
             await setProcessing(file, "pngquant", step: step, total: total)
@@ -125,30 +105,7 @@ actor ImageOptimizer {
             cleanupIfNot(oxiOut, keep: bestPath)
         }
 
-        guard !Task.isCancelled else {
-            await MainActor.run { file.status = .pending }
-            return
-        }
-
-        // --- pngcrush (brute-force filter selection) ---
-        if level.usePngcrush, let pngcrush = toolManager.find("pngcrush") {
-            step += 1
-            await setProcessing(file, "pngcrush", step: step, total: total)
-            let crushIn = tempPath + ".crush_in.png"
-            let crushOut = tempPath + ".crush.png"
-            if copyFile(from: bestPath, to: crushIn) {
-                var args = ["-reduce"]
-                if level.pngcrushBrute { args.append("-brute") }
-                if level.stripMetadata { args += ["-rem", "allb"] }
-                args += [crushIn, crushOut]
-                let result = await run(pngcrush, args: args)
-                try? FileManager.default.removeItem(atPath: crushIn)
-                if result.exitCode == 0 {
-                    bestPath = keepBest(&bestSize, candidate: crushOut, current: bestPath, tempBase: tempPath)
-                }
-                cleanupIfNot(crushOut, keep: bestPath)
-            }
-        }
+        // pngcrush retiré — Benchmark 2026-03-31: 0/50 victoires
 
         await finalize(file: file, originalPath: path, bestPath: bestPath, bestSize: bestSize)
     }

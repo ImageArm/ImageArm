@@ -14,9 +14,11 @@
 		17807DBB886B746B3122A2FD /* QualityOverrides.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C3102C346DA1817DE2E1063 /* QualityOverrides.swift */; };
 		26049FD18F56A22D527BB127 /* FileListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79F089F84BE43380BFB688AF /* FileListView.swift */; };
 		2C70BC2AA396C3CE132A39A4 /* ImageStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7E50640A56162A7C8E82AA8 /* ImageStoreTests.swift */; };
+		368D1A75CF73DBEB7EA6B74D /* GPUBenchmarkTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8BB7519DB748AF683ECA59F /* GPUBenchmarkTests.swift */; };
 		36E12A663EE034F23EF7AA50 /* ImageStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4CE088F6968AB2E5FA39815 /* ImageStore.swift */; };
 		489BEED503844892D732B1E0 /* StatusBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8C5F6355F3D9ED3D9BA4282 /* StatusBarView.swift */; };
 		4FCB0BE71B5E3F3072D9C2AC /* OptimizationLevelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F3242D9FC3027B7E545109D /* OptimizationLevelTests.swift */; };
+		51381532B9C17FC1A8E6330A /* PipelineSimplificationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6DE88D6F85DE3311596FF88 /* PipelineSimplificationTests.swift */; };
 		58FD2E395271F480A9CA8B0D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8B0BD0A13E37BD42F5DC5550 /* Assets.xcassets */; };
 		5BF682C3B2920340C5771DF1 /* test.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 49BB35BBDD221D4555BA234C /* test.jpg */; };
 		650B2BED0578118583ED6D96 /* OptimizationLevel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 644E147FD08A55090EA523E5 /* OptimizationLevel.swift */; };
@@ -75,6 +77,7 @@
 		906EEBD9F0EF8AA81A05EF01 /* Credits.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = Credits.rtf; sourceTree = "<group>"; };
 		9A344CC4BD7CEDA4B232DE56 /* test.webp */ = {isa = PBXFileReference; path = test.webp; sourceTree = "<group>"; };
 		A5040B70DBF2B8C5742CDA26 /* FileSizeFormatterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileSizeFormatterTests.swift; sourceTree = "<group>"; };
+		A8BB7519DB748AF683ECA59F /* GPUBenchmarkTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GPUBenchmarkTests.swift; sourceTree = "<group>"; };
 		AA60CD45D81944D863246858 /* LogConsoleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogConsoleView.swift; sourceTree = "<group>"; };
 		B00CBC468D4B7FC89D0E19F5 /* LogStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogStore.swift; sourceTree = "<group>"; };
 		B0271E13508B2C2BC5CAE259 /* QualityOverridesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QualityOverridesTests.swift; sourceTree = "<group>"; };
@@ -84,6 +87,7 @@
 		BEC8EAB125DF83585EF98FB9 /* ImageOptimizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageOptimizer.swift; sourceTree = "<group>"; };
 		BEFFF38617A14492DB7795A7 /* ImageArmTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ImageArmTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C296D83381D122F6B8A5ED55 /* ToolManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolManagerTests.swift; sourceTree = "<group>"; };
+		C6DE88D6F85DE3311596FF88 /* PipelineSimplificationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PipelineSimplificationTests.swift; sourceTree = "<group>"; };
 		CE363B83B296D8A3E16A54FB /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		D5A66266FC8828E25AEF5581 /* test.svg */ = {isa = PBXFileReference; path = test.svg; sourceTree = "<group>"; };
 		D6C9B3A52E92619DE65DE5FC /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
@@ -111,12 +115,14 @@
 			isa = PBXGroup;
 			children = (
 				A5040B70DBF2B8C5742CDA26 /* FileSizeFormatterTests.swift */,
+				A8BB7519DB748AF683ECA59F /* GPUBenchmarkTests.swift */,
 				7FA3ED494B18270C3512B76D /* HeadlessModeTests.swift */,
 				5673C26418E655EFF5FE061C /* ImageFormatTests.swift */,
 				621ADDA30FD30CDE16DC395A /* ImageOptimizerTests.swift */,
 				B7E50640A56162A7C8E82AA8 /* ImageStoreTests.swift */,
 				8F3242D9FC3027B7E545109D /* OptimizationLevelTests.swift */,
 				E4C25D7F66714D0E73671A25 /* OptimizationStatusTests.swift */,
+				C6DE88D6F85DE3311596FF88 /* PipelineSimplificationTests.swift */,
 				B0271E13508B2C2BC5CAE259 /* QualityOverridesTests.swift */,
 				C296D83381D122F6B8A5ED55 /* ToolManagerTests.swift */,
 				1AD7229642A928635D7C34B9 /* Resources */,
@@ -261,7 +267,11 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				Base,
+				de,
 				en,
+				fr,
+				it,
+				nl,
 			);
 			mainGroup = 4A7304FFB7D6B79144FF6E4D;
 			minimizedProjectReferenceProxies = 1;
@@ -318,7 +328,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "cp -f \"$PROJECT_DIR/tools/bin/pngquant\" \"$BUILT_PRODUCTS_DIR/$EXECUTABLE_FOLDER_PATH/\"\ncp -f \"$PROJECT_DIR/tools/bin/oxipng\" \"$BUILT_PRODUCTS_DIR/$EXECUTABLE_FOLDER_PATH/\"\ncp -f \"$PROJECT_DIR/tools/bin/pngcrush\" \"$BUILT_PRODUCTS_DIR/$EXECUTABLE_FOLDER_PATH/\"\ncp -f \"$PROJECT_DIR/tools/bin/cjpeg\" \"$BUILT_PRODUCTS_DIR/$EXECUTABLE_FOLDER_PATH/\"\ncp -f \"$PROJECT_DIR/tools/bin/jpegtran\" \"$BUILT_PRODUCTS_DIR/$EXECUTABLE_FOLDER_PATH/\"\ncp -f \"$PROJECT_DIR/tools/bin/svgo\" \"$BUILT_PRODUCTS_DIR/$EXECUTABLE_FOLDER_PATH/\"\ncp -f \"$PROJECT_DIR/tools/bin/cwebp\" \"$BUILT_PRODUCTS_DIR/$EXECUTABLE_FOLDER_PATH/\"\ncp -f \"$PROJECT_DIR/tools/bin/gifsicle\" \"$BUILT_PRODUCTS_DIR/$EXECUTABLE_FOLDER_PATH/\"\n";
+			shellScript = "cp -f \"$PROJECT_DIR/tools/bin/pngquant\" \"$BUILT_PRODUCTS_DIR/$EXECUTABLE_FOLDER_PATH/\"\ncp -f \"$PROJECT_DIR/tools/bin/oxipng\" \"$BUILT_PRODUCTS_DIR/$EXECUTABLE_FOLDER_PATH/\"\ncp -f \"$PROJECT_DIR/tools/bin/cjpeg\" \"$BUILT_PRODUCTS_DIR/$EXECUTABLE_FOLDER_PATH/\"\ncp -f \"$PROJECT_DIR/tools/bin/jpegtran\" \"$BUILT_PRODUCTS_DIR/$EXECUTABLE_FOLDER_PATH/\"\ncp -f \"$PROJECT_DIR/tools/bin/svgo\" \"$BUILT_PRODUCTS_DIR/$EXECUTABLE_FOLDER_PATH/\"\ncp -f \"$PROJECT_DIR/tools/bin/cwebp\" \"$BUILT_PRODUCTS_DIR/$EXECUTABLE_FOLDER_PATH/\"\ncp -f \"$PROJECT_DIR/tools/bin/gifsicle\" \"$BUILT_PRODUCTS_DIR/$EXECUTABLE_FOLDER_PATH/\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -353,12 +363,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				C1A2F3687676BAE99DD899E4 /* FileSizeFormatterTests.swift in Sources */,
+				368D1A75CF73DBEB7EA6B74D /* GPUBenchmarkTests.swift in Sources */,
 				756D530F4551228DD8625B07 /* HeadlessModeTests.swift in Sources */,
 				9170B45319C507D29D27B47C /* ImageFormatTests.swift in Sources */,
 				FC88595E7D2CAFD4CDEB5E55 /* ImageOptimizerTests.swift in Sources */,
 				2C70BC2AA396C3CE132A39A4 /* ImageStoreTests.swift in Sources */,
 				4FCB0BE71B5E3F3072D9C2AC /* OptimizationLevelTests.swift in Sources */,
 				0816DCAABA1DCFDBF2522C1D /* OptimizationStatusTests.swift in Sources */,
+				51381532B9C17FC1A8E6330A /* PipelineSimplificationTests.swift in Sources */,
 				F47DA96BE9E3E1C24494D0E0 /* QualityOverridesTests.swift in Sources */,
 				F537034027F5DA16ED5C2477 /* ToolManagerTests.swift in Sources */,
 			);

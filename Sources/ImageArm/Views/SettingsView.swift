@@ -250,9 +250,6 @@ struct LevelDetailView: View {
             items.append("pngquant \(minQ)-\(maxQ)%")
         }
         items.append("oxipng -o\(level.oxipngLevel)")
-        if level.usePngcrush {
-            items.append("pngcrush" + (level.pngcrushBrute ? " brute" : ""))
-        }
         return items
     }
 

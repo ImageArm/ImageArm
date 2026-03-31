@@ -86,16 +86,11 @@ enum OptimizationLevel: Int, CaseIterable, Identifiable, Codable {
     }
 
     var usePngcrush: Bool {
-        switch self {
-        case .quick: return false
-        case .standard: return false
-        case .high: return true
-        case .ultra: return true
-        }
+        false  // Benchmark 2026-03-31: pngcrush 0/50 victoires → retiré
     }
 
     var pngcrushBrute: Bool {
-        self == .ultra
+        false  // Benchmark 2026-03-31: pngcrush retiré
     }
 
     // MARK: - JPEG Settings
@@ -242,9 +237,7 @@ enum OptimizationLevel: Int, CaseIterable, Identifiable, Codable {
         switch format {
         case .png:
             var steps = 1 // oxipng always
-            if pngLossy && useGPU { steps += 1 } // GPU quantize
             if pngLossy { steps += 1 }            // pngquant
-            if usePngcrush { steps += 1 }
             return steps
         case .jpeg:
             var steps = 0

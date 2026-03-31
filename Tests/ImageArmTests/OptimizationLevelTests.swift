@@ -33,15 +33,17 @@ final class OptimizationLevelTests: XCTestCase {
     }
 
     func testUsePngcrush() {
-        XCTAssertFalse(OptimizationLevel.quick.usePngcrush)
-        XCTAssertFalse(OptimizationLevel.standard.usePngcrush)
-        XCTAssertTrue(OptimizationLevel.high.usePngcrush)
-        XCTAssertTrue(OptimizationLevel.ultra.usePngcrush)
+        // Benchmark 2026-03-31: pngcrush retiré (0/50 victoires)
+        for level in OptimizationLevel.allCases {
+            XCTAssertFalse(level.usePngcrush)
+        }
     }
 
     func testPngcrushBrute() {
-        XCTAssertFalse(OptimizationLevel.high.pngcrushBrute)
-        XCTAssertTrue(OptimizationLevel.ultra.pngcrushBrute)
+        // Benchmark 2026-03-31: pngcrush retiré
+        for level in OptimizationLevel.allCases {
+            XCTAssertFalse(level.pngcrushBrute)
+        }
     }
 
     func testPNGQuantQualityRange() {

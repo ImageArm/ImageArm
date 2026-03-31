@@ -1,0 +1,31 @@
+Benchmark comparatif JPEG outil-par-outil — ImageArm
+Date : 2026-03-31 11:24:44
+Machine : Apple M4 Max
+
+================================================================
+  JPEG — VICTOIRES PAR OUTIL (10 images)
+================================================================
+  NOTE: cjpeg est LOSSY (ré-encode), jpegtran est LOSSLESS (restructure)
+  La comparaison lossy vs lossless est indicative — la qualité visuelle diffère.
+
+  jpegtran               10 victoires (100.0%)  lossless  économie: 582.0 Ko
+  cjpeg_q95               0 victoires (  0.0%)  lossy     économie: 0.0 Ko
+  cjpeg_q85               0 victoires (  0.0%)  lossy     économie: 0.0 Ko
+  cjpeg_q75               0 victoires (  0.0%)  lossy     économie: 0.0 Ko
+  cjpeg_q65               0 victoires (  0.0%)  lossy     économie: 0.0 Ko
+  original                0 victoires (  0.0%)  —         économie: — Ko
+
+  Marge moyenne entre 1er et 2ème : 59595 octets/image
+
+================================================================
+  ANALYSE LOSSLESS vs LOSSY
+================================================================
+
+  jpegtran (lossless) : 10 victoires
+  cjpeg (lossy total) : 0 victoires
+
+  → jpegtran gagne 100% du temps en taille.
+    Mais cjpeg lossy produit des fichiers plus petits par définition.
+    La question est : la perte de qualité est-elle acceptable ?
+
+Données détaillées : /Users/julien/mobile/armimage/Tests/fixtures/benchmark/jpeg-comparison-results.csv

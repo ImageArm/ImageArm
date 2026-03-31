@@ -1,0 +1,25 @@
+Benchmark comparatif SVG (svgo configurations) — ImageArm
+Date : 2026-03-31 11:27:57
+Machine : Apple M4 Max
+
+================================================================
+  SVG — VICTOIRES PAR CONFIGURATION (3 images)
+================================================================
+  svgo_default            3 victoires (100.0%)  économie totale: 2.6 Ko
+  svgo_multipass          0 victoires (  0.0%)  économie totale: 2.6 Ko
+  svgo_2passes            0 victoires (  0.0%)  économie totale: 2.6 Ko
+  original                0 victoires (  0.0%)  économie totale: — Ko
+
+  Gain moyen multipass vs default : 0 octets/image
+
+================================================================
+  CONCLUSION SVG
+================================================================
+
+  → Le gain de multipass est négligeable (<100 octets total).
+    RECOMMANDATION : svgo default suffit. Multipass uniquement en Ultra.
+
+  NOTE: svgo est le seul outil SVG. Pas de compétition multi-outils possible.
+  Le pipeline SVG actuel (svgo seul) est optimal.
+
+Données détaillées : /Users/julien/mobile/armimage/Tests/fixtures/benchmark/svg-comparison-results.csv

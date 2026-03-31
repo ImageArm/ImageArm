@@ -1,0 +1,36 @@
+Benchmark comparatif outil-par-outil — ImageArm
+Date : 2026-03-31 11:15:54
+Machine : Apple M4 Max
+
+================================================================
+  PNG — VICTOIRES PAR OUTIL (50 images)
+================================================================
+  pngquant               30 victoires ( 60.0%)   économie totale: 14250.2 Ko
+  oxipng_o2               0 victoires (  0.0%)   économie totale: 3752.7 Ko
+  oxipng_o4              14 victoires ( 28.0%)   économie totale: 3219.5 Ko
+  oxipng_o6               6 victoires ( 12.0%)   économie totale: 4024.5 Ko
+  pngcrush                0 victoires (  0.0%)   économie totale: 3254.9 Ko
+  pngcrush_brute          0 victoires (  0.0%)   économie totale: 3664.4 Ko
+  original                0 victoires (  0.0%)   économie totale: — Ko
+
+  Marge moyenne entre 1er et 2ème : 212696 octets/image
+
+================================================================
+  JPEG — jpegtran (seul outil lossless)
+================================================================
+  Total original : 4203.0 Ko
+  Total optimisé : 3621.0 Ko
+  Économie       : 582.0 Ko (13.8%)
+  → Un seul outil (jpegtran) suffit en mode lossless
+
+================================================================
+  CONCLUSION & RECOMMANDATIONS
+================================================================
+
+  Outil dominant PNG : pngquant (30/50 = 60%)
+
+  → Aucun outil ne domine clairement.
+    RECOMMANDATION : le pipeline compétitif est JUSTIFIÉ.
+    Chaque outil gagne sur un type d'image différent.
+
+Données détaillées : /Users/julien/mobile/armimage/Tests/fixtures/benchmark/tool-comparison-results.csv

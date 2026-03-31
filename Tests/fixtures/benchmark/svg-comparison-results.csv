@@ -1,0 +1,4 @@
+file,original_bytes,svgo_default_bytes,svgo_multipass_bytes,svgo_2passes_bytes,winner,winner_bytes,savings_pct,multipass_gain_vs_default
+bench-svg-001.svg,5317,4122,4122,4122,svgo_default,4122,22.5,0
+bench-svg-002.svg,3542,2711,2711,2711,svgo_default,2711,23.5,0
+bench-svg-003.svg,2871,2283,2283,2283,svgo_default,2283,20.5,0

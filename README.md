@@ -46,7 +46,7 @@ ImageArm est une app macOS native qui **compresse vos images jusqu'a 80%** sans 
 
 | Format | Outils utilises | Acceleration GPU |
 |--------|----------------|-----------------|
-| **PNG** | pngquant + oxipng + pngcrush | Metal compute shader (quantization + dithering) |
+| **PNG** | pngquant + oxipng | — |
 | **JPEG** | mozjpeg (jpegtran/cjpeg) | Apple Silicon hardware encoder |
 | **HEIF/HEIC** | ImageIO natif | Apple Silicon hardware encoder |
 | **GIF** | gifsicle (lossless + lossy optionnel) | — |
@@ -58,14 +58,14 @@ ImageArm est une app macOS native qui **compresse vos images jusqu'a 80%** sans 
 ### Comment ca marche
 
 ```
-Votre image ──▶ [ GPU Metal ] ──▶ [ pngquant ] ──▶ [ oxipng ] ──▶ [ pngcrush ]
-                     │                  │                │               │
-                     ▼                  ▼                ▼               ▼
-                  Resultat 1         Resultat 2       Resultat 3     Resultat 4
-                     │                  │                │               │
-                     └──────────────────┴────────────────┴───────────────┘
-                                        │
-                                   Le plus petit gagne.
+Votre image ──▶ [ pngquant ] ──▶ [ oxipng ]
+                     │                │
+                     ▼                ▼
+                  Resultat 1      Resultat 2
+                     │                │
+                     └────────────────┘
+                              │
+                       Le plus petit gagne.
 ```
 
 Chaque outil produit un resultat. **Le fichier le plus leger gagne.** Votre original est remplace de maniere atomique avec backup dans la corbeille.
@@ -189,7 +189,7 @@ ImageArm is a native macOS app that **compresses your images up to 80%** with no
 
 | Format | Tools used | GPU acceleration |
 |--------|-----------|-----------------|
-| **PNG** | pngquant + oxipng + pngcrush | Metal compute shader (quantization + dithering) |
+| **PNG** | pngquant + oxipng | — |
 | **JPEG** | mozjpeg (jpegtran/cjpeg) | Apple Silicon hardware encoder |
 | **HEIF/HEIC** | Native ImageIO | Apple Silicon hardware encoder |
 | **GIF** | gifsicle (lossless + optional lossy) | — |
@@ -201,14 +201,14 @@ ImageArm is a native macOS app that **compresses your images up to 80%** with no
 ### How it works
 
 ```
-Your image ──▶ [ Metal GPU ] ──▶ [ pngquant ] ──▶ [ oxipng ] ──▶ [ pngcrush ]
-                    │                  │               │               │
-                    ▼                  ▼               ▼               ▼
-                 Result 1           Result 2        Result 3        Result 4
-                    │                  │               │               │
-                    └──────────────────┴───────────────┴───────────────┘
-                                       │
-                                  Smallest wins.
+Your image ──▶ [ pngquant ] ──▶ [ oxipng ]
+                    │                │
+                    ▼                ▼
+                 Result 1         Result 2
+                    │                │
+                    └────────────────┘
+                             │
+                        Smallest wins.
 ```
 
 Every tool produces a result. **The lightest file wins.** Your original is atomically replaced with a backup sent to Trash.

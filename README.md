@@ -57,15 +57,13 @@ ImageArm est une app macOS native qui **compresse vos images jusqu'a 80%** sans 
 
 ### Comment ca marche
 
-```
-Votre image ──▶ [ pngquant ] ──▶ [ oxipng ]
-                     │                │
-                     ▼                ▼
-                  Resultat 1      Resultat 2
-                     │                │
-                     └────────────────┘
-                              │
-                       Le plus petit gagne.
+```mermaid
+graph LR
+    A[🖼️ Votre image] --> B[pngquant]
+    A --> C[oxipng]
+    B --> D{Le plus petit gagne}
+    C --> D
+    D --> E[✅ Fichier optimisé]
 ```
 
 Chaque outil produit un resultat. **Le fichier le plus leger gagne.** Votre original est remplace de maniere atomique avec backup dans la corbeille.
@@ -200,15 +198,13 @@ ImageArm is a native macOS app that **compresses your images up to 80%** with no
 
 ### How it works
 
-```
-Your image ──▶ [ pngquant ] ──▶ [ oxipng ]
-                    │                │
-                    ▼                ▼
-                 Result 1         Result 2
-                    │                │
-                    └────────────────┘
-                             │
-                        Smallest wins.
+```mermaid
+graph LR
+    A[🖼️ Your image] --> B[pngquant]
+    A --> C[oxipng]
+    B --> D{Smallest wins}
+    C --> D
+    D --> E[✅ Optimized file]
 ```
 
 Every tool produces a result. **The lightest file wins.** Your original is atomically replaced with a backup sent to Trash.

@@ -21,9 +21,9 @@
     <key>CFBundlePackageType</key>
     <string>APPL</string>
     <key>CFBundleShortVersionString</key>
-    <string>1.3.0</string>
+    <string>1.3.1</string>
     <key>CFBundleVersion</key>
-    <string>7</string>
+    <string>8</string>
     <key>LSMinimumSystemVersion</key>
     <string>14.0</string>
     <key>LSApplicationCategoryType</key>
@@ -36,6 +36,8 @@
     <false/>
     <key>NSHumanReadableCopyright</key>
     <string>Copyright © 2026 Julien. Tous droits réservés.</string>
+    <key>LSMultipleInstancesProhibited</key>
+    <true/>
     <key>NSPrincipalClass</key>
     <string>NSApplication</string>
     <key>CFBundleDocumentTypes</key>

@@ -31,6 +31,7 @@
 		A235E14D5CEED93577E839CC /* LogStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00CBC468D4B7FC89D0E19F5 /* LogStore.swift */; };
 		A2FCE5A149C830648E6769C9 /* ImageArmApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A8272C55C168F63F5596DB /* ImageArmApp.swift */; };
 		A7D73A6F9BBCE5A5D76C6844 /* DesignTokens.swift in Sources */ = {isa = PBXBuildFile; fileRef = 888C7ABC5BD0533C22E4607B /* DesignTokens.swift */; };
+		A82E73A39C26E858B0691821 /* AppDelegateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D439D0E9674BAB99BACCA673 /* AppDelegateTests.swift */; };
 		B88D1636AC166844F75899B9 /* ToolManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C09607F69C662F4A4EFDF0E /* ToolManager.swift */; };
 		BD70295EFD6A320FE4784BA2 /* ImageOptimizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEC8EAB125DF83585EF98FB9 /* ImageOptimizer.swift */; };
 		C1A2F3687676BAE99DD899E4 /* FileSizeFormatterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5040B70DBF2B8C5742CDA26 /* FileSizeFormatterTests.swift */; };
@@ -89,6 +90,7 @@
 		C296D83381D122F6B8A5ED55 /* ToolManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolManagerTests.swift; sourceTree = "<group>"; };
 		C6DE88D6F85DE3311596FF88 /* PipelineSimplificationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PipelineSimplificationTests.swift; sourceTree = "<group>"; };
 		CE363B83B296D8A3E16A54FB /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		D439D0E9674BAB99BACCA673 /* AppDelegateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegateTests.swift; sourceTree = "<group>"; };
 		D5A66266FC8828E25AEF5581 /* test.svg */ = {isa = PBXFileReference; path = test.svg; sourceTree = "<group>"; };
 		D6C9B3A52E92619DE65DE5FC /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		D6E21D30E9694290B6AAB874 /* ImageFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageFile.swift; sourceTree = "<group>"; };
@@ -114,6 +116,7 @@
 		152D2A1428B528C4BB376A47 /* ImageArmTests */ = {
 			isa = PBXGroup;
 			children = (
+				D439D0E9674BAB99BACCA673 /* AppDelegateTests.swift */,
 				A5040B70DBF2B8C5742CDA26 /* FileSizeFormatterTests.swift */,
 				A8BB7519DB748AF683ECA59F /* GPUBenchmarkTests.swift */,
 				7FA3ED494B18270C3512B76D /* HeadlessModeTests.swift */,
@@ -362,6 +365,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A82E73A39C26E858B0691821 /* AppDelegateTests.swift in Sources */,
 				C1A2F3687676BAE99DD899E4 /* FileSizeFormatterTests.swift in Sources */,
 				368D1A75CF73DBEB7EA6B74D /* GPUBenchmarkTests.swift in Sources */,
 				756D530F4551228DD8625B07 /* HeadlessModeTests.swift in Sources */,

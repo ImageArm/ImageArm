@@ -52,6 +52,16 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     var store: ImageStore?
     private var pendingURLs: [URL] = []
 
+    func applicationWillFinishLaunching(_ notification: Notification) {
+        // Intercept kAEOpenDocuments before SwiftUI's handler creates one window per file
+        NSAppleEventManager.shared().setEventHandler(
+            self,
+            andSelector: #selector(handleOpenDocumentsEvent(_:replyEvent:)),
+            forEventClass: 0x61657674,  // kCoreEventClass 'aevt'
+            andEventID: 0x6F646F63      // kAEOpenDocuments 'odoc'
+        )
+    }
+
     func applicationDidFinishLaunching(_ notification: Notification) {
         if isHeadless {
             NSApp.setActivationPolicy(.prohibited)
@@ -89,6 +99,31 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         pendingURLs = []
         store.addFiles(urls: urls)
         store.optimizeAll()
+    }
+
+    // MARK: - Apple Event handler
+
+    @objc private func handleOpenDocumentsEvent(_ event: NSAppleEventDescriptor, replyEvent: NSAppleEventDescriptor) {
+        guard let list = event.paramDescriptor(forKeyword: 0x2D2D2D2D) else { return } // keyDirectObject '----'
+        let count = list.numberOfItems
+        let descriptors = count > 0 ? (1...count).compactMap { list.atIndex($0) } : [list]
+        let urls = descriptors.compactMap { urlFromDescriptor($0) }
+        guard !urls.isEmpty else { return }
+        application(NSApplication.shared, open: urls)
+    }
+
+    private func urlFromDescriptor(_ descriptor: NSAppleEventDescriptor) -> URL? {
+        // Try coercing to file URL (modern macOS)
+        if let coerced = descriptor.coerce(toDescriptorType: 0x6675726C),  // typeFileURL 'furl'
+           let str = String(data: coerced.data, encoding: .utf8),
+           let url = URL(string: str) {
+            return url
+        }
+        // Fallback: string value as POSIX path
+        if let path = descriptor.stringValue, !path.isEmpty {
+            return path.hasPrefix("/") ? URL(fileURLWithPath: path) : URL(string: path)
+        }
+        return nil
     }
 
     // MARK: - Headless mode

@@ -52,7 +52,11 @@ jobs:
 
           git diff
           git add Casks/imagearm.rb
-          git commit -m "Update imagearm cask → ${VERSION}"
-          git push origin main
 
-          echo "✅ Tap mis à jour : https://github.com/ImageArm/homebrew-tap"
+          if git diff --cached --quiet; then
+            echo "ℹ️ Tap déjà à jour pour v${VERSION} — aucun commit nécessaire."
+          else
+            git commit -m "Update imagearm cask → ${VERSION}"
+            git push origin main
+            echo "✅ Tap mis à jour : https://github.com/ImageArm/homebrew-tap"
+          fi

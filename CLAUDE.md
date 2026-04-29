@@ -80,6 +80,10 @@ Ce script récupère automatiquement le sha256 du DMG depuis les assets GitHub e
 - Entitlements: no sandbox, file access, GPU access (`ImageArm.entitlements`)
 
 
+## Skills disponibles
+
+Voir **[AGENTS.md](AGENTS.md)** pour la liste complète des skills Claude Code disponibles dans ce projet (revues, développement, architecture, planification, automatisation).
+
 ## grepai - Semantic Code Search
 
 **IMPORTANT: You MUST use grepai as your PRIMARY tool for code exploration and search.**

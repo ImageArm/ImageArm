@@ -50,7 +50,9 @@ struct ImageArmApp: App {
 
 final class AppDelegate: NSObject, NSApplicationDelegate {
     var store: ImageStore?
-    private var pendingURLs: [URL] = []
+    private var pendingURLs: [URL] = []   // en attente d'init du store
+    private var batchURLs: [URL] = []     // accumulation debounce
+    private var batchTask: Task<Void, Never>?
 
     func applicationWillFinishLaunching(_ notification: Notification) {
         // Intercept kAEOpenDocuments before SwiftUI's handler creates one window per file
@@ -75,20 +77,33 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         !isHeadless
     }
 
-    /// Called when files are opened via `open -a ImageArm file.png` or Finder double-click
+    /// Called when files are opened via `open -a ImageArm file.png` or Finder Quick Action.
+    /// Uses a 250ms debounce to batch rapid sequential calls (e.g. when macOS sends
+    /// one Apple Event per file instead of one event with the full list).
     func application(_ application: NSApplication, open urls: [URL]) {
         let imageURLs = filterImageURLs(urls)
         guard !imageURLs.isEmpty else { return }
 
-        optiLog(String(localized: "Ouverture: \(imageURLs.count) fichier(s)"), level: .info)
+        batchURLs.append(contentsOf: imageURLs)
 
-        if let store = store {
-            Task { @MainActor in
-                store.addFiles(urls: imageURLs)
+        batchTask?.cancel()
+        batchTask = Task { @MainActor [weak self] in
+            guard let self else { return }
+            try? await Task.sleep(for: .milliseconds(250))
+            guard !Task.isCancelled else { return }
+
+            let urlsToProcess = self.batchURLs
+            self.batchURLs = []
+            guard !urlsToProcess.isEmpty else { return }
+
+            optiLog(String(localized: "Ouverture: \(urlsToProcess.count) fichier(s)"), level: .info)
+
+            if let store = self.store {
+                store.addFiles(urls: urlsToProcess)
                 store.optimizeAll()
+            } else {
+                self.pendingURLs.append(contentsOf: urlsToProcess)
             }
-        } else {
-            pendingURLs.append(contentsOf: imageURLs)
         }
     }
 

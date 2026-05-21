@@ -108,6 +108,10 @@ actor ImageOptimizer {
 
         // pngcrush retiré — Benchmark 2026-03-31: 0/50 victoires
 
+        guard !Task.isCancelled else {
+            await MainActor.run { file.status = .pending }
+            return
+        }
         await finalize(file: file, originalPath: path, bestPath: bestPath, bestSize: bestSize, overrides: overrides)
     }
 
@@ -172,6 +176,10 @@ actor ImageOptimizer {
             cleanupIfNot(mozOut, keep: bestPath)
         }
 
+        guard !Task.isCancelled else {
+            await MainActor.run { file.status = .pending }
+            return
+        }
         await finalize(file: file, originalPath: path, bestPath: bestPath, bestSize: bestSize, overrides: overrides)
     }
 
@@ -235,6 +243,10 @@ actor ImageOptimizer {
             cleanupIfNot(losslessOut, keep: bestPath)
         }
 
+        guard !Task.isCancelled else {
+            await MainActor.run { file.status = .pending }
+            return
+        }
         await finalize(file: file, originalPath: path, bestPath: bestPath, bestSize: bestSize, overrides: overrides)
     }
 
@@ -454,6 +466,10 @@ actor ImageOptimizer {
             cleanupIfNot(maxOut, keep: bestPath)
         }
 
+        guard !Task.isCancelled else {
+            await MainActor.run { file.status = .pending }
+            return
+        }
         await finalize(file: file, originalPath: path, bestPath: bestPath, bestSize: bestSize, overrides: overrides)
     }
 
@@ -638,7 +654,7 @@ actor ImageOptimizer {
         let baseName = URL(fileURLWithPath: path).lastPathComponent
         let dir = URL(fileURLWithPath: path).deletingLastPathComponent().path
         if let items = try? FileManager.default.contentsOfDirectory(atPath: dir) {
-            for item in items where item.hasPrefix(baseName + ".imagearm.") {
+            for item in items where item.hasPrefix(baseName + ".imagearm.") && !item.hasSuffix(".imagearm.backup") {
                 try? FileManager.default.removeItem(atPath: dir + "/" + item)
             }
         }
@@ -708,6 +724,11 @@ actor ImageOptimizer {
 
         return await withTaskCancellationHandler {
             await withCheckedContinuation { continuation in
+                // Enter group BEFORE run() so terminationHandler always finds count > 0,
+                // even if the process exits before the async reads are dispatched.
+                readGroup.enter()
+                readGroup.enter()
+
                 // Set terminationHandler BEFORE run() to avoid race condition
                 // where process exits before handler is assigned.
                 process.terminationHandler = { _ in
@@ -724,18 +745,18 @@ actor ImageOptimizer {
                     try process.run()
                 } catch {
                     process.terminationHandler = nil
+                    readGroup.leave()
+                    readGroup.leave()
                     continuation.resume(returning: ProcessResult(exitCode: -1, stdout: "", stderr: error.localizedDescription))
                     return
                 }
 
                 // Read pipe data AFTER process started to avoid deadlock
                 // when the pipe buffer (64KB) fills up.
-                readGroup.enter()
                 DispatchQueue.global().async {
                     stdoutData = stdoutHandle.readDataToEndOfFile()
                     readGroup.leave()
                 }
-                readGroup.enter()
                 DispatchQueue.global().async {
                     stderrData = stderrHandle.readDataToEndOfFile()
                     readGroup.leave()

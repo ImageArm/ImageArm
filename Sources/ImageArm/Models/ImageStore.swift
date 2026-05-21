@@ -33,7 +33,8 @@ final class ImageStore: ObservableObject {
 
     private let optimizer = ImageOptimizer()
     private var optimizationTask: Task<Void, Never>?
-    private var auxiliaryTasks: [Task<Void, Never>] = []
+    private var auxiliaryTasks: [UUID: Task<Void, Never>] = [:]
+    private var mainTaskRunning = false
     private var fileCancellables = Set<AnyCancellable>()
     private static let completionSound = NSSound(contentsOf: URL(fileURLWithPath: "/System/Library/Sounds/Glass.aiff"), byReference: true)
 
@@ -138,7 +139,12 @@ final class ImageStore: ObservableObject {
                 preserveTimestamps: self.preserveTimestamps,
                 preserveMetadata: self.preserveMetadata
             )
+            let taskID = UUID()
             let task = Task {
+                defer {
+                    self.auxiliaryTasks.removeValue(forKey: taskID)
+                    if self.auxiliaryTasks.isEmpty && !self.mainTaskRunning { self.isProcessing = false }
+                }
                 await withBoundedConcurrency(over: pending, maxConcurrent: maxConc) { file in
                     await self.optimizer.optimize(file: file, level: level, overrides: overrides)
                 }
@@ -154,11 +160,12 @@ final class ImageStore: ObservableObject {
                     showDonationPrompt = true
                 }
             }
-            auxiliaryTasks.append(task)
+            auxiliaryTasks[taskID] = task
             return
         }
 
         isProcessing = true
+        mainTaskRunning = true
         let level = self.level
         let maxConc = self.maxConcurrent
         let overrides = QualityOverrides(
@@ -185,7 +192,8 @@ final class ImageStore: ObservableObject {
                 donationTriggerTotalSavings = max(0, totalSavings)   // clamped ≥ 0 (F5)
                 showDonationPrompt = true
             }
-            isProcessing = false
+            mainTaskRunning = false
+            if auxiliaryTasks.isEmpty { isProcessing = false }
             optiLog(String(localized: "Traitement terminé"), level: .success)
             Self.completionSound?.stop()
             Self.completionSound?.play()
@@ -194,8 +202,9 @@ final class ImageStore: ObservableObject {
 
     func stopAll() {
         optimizationTask?.cancel()
-        for task in auxiliaryTasks { task.cancel() }
+        for task in auxiliaryTasks.values { task.cancel() }
         auxiliaryTasks.removeAll()
+        mainTaskRunning = false
         isProcessing = false
         for file in files where file.status.currentTool != nil {
             file.status = .pending
@@ -229,9 +238,15 @@ final class ImageStore: ObservableObject {
             preserveTimestamps: self.preserveTimestamps,
             preserveMetadata: self.preserveMetadata
         )
+        isProcessing = true
+        let taskID = UUID()
         let task = Task {
+            defer {
+                self.auxiliaryTasks.removeValue(forKey: taskID)
+                if self.auxiliaryTasks.isEmpty && !self.mainTaskRunning { self.isProcessing = false }
+            }
             await optimizer.optimize(file: file, level: level, overrides: overrides)
         }
-        auxiliaryTasks.append(task)
+        auxiliaryTasks[taskID] = task
     }
 }

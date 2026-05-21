@@ -20,6 +20,7 @@ final class ImageStore: ObservableObject {
     @AppStorage("pngLossy") var pngLossyOverride = false
     @AppStorage("pngQualityCustom") var pngQualityCustom = 80.0
     @AppStorage("useCustomQuality") var useCustomQuality = false
+    @AppStorage("preserveTimestamps") var preserveTimestamps = true
 
     private static let donationPromptsEnabled = true
     @AppStorage("donationBatchCount") var donationBatchCount = 0
@@ -132,7 +133,8 @@ final class ImageStore: ObservableObject {
                 jpegLossy: self.jpegLossyOverride,
                 jpegQuality: Int(self.jpegQualityCustom),
                 pngLossy: self.pngLossyOverride,
-                pngQuality: Int(self.pngQualityCustom)
+                pngQuality: Int(self.pngQualityCustom),
+                preserveTimestamps: self.preserveTimestamps
             )
             let task = Task {
                 await withBoundedConcurrency(over: pending, maxConcurrent: maxConc) { file in
@@ -162,7 +164,8 @@ final class ImageStore: ObservableObject {
             jpegLossy: self.jpegLossyOverride,
             jpegQuality: Int(self.jpegQualityCustom),
             pngLossy: self.pngLossyOverride,
-            pngQuality: Int(self.pngQualityCustom)
+            pngQuality: Int(self.pngQualityCustom),
+            preserveTimestamps: self.preserveTimestamps
         )
 
         optimizationTask = Task {
@@ -219,7 +222,8 @@ final class ImageStore: ObservableObject {
             jpegLossy: self.jpegLossyOverride,
             jpegQuality: Int(self.jpegQualityCustom),
             pngLossy: self.pngLossyOverride,
-            pngQuality: Int(self.pngQualityCustom)
+            pngQuality: Int(self.pngQualityCustom),
+            preserveTimestamps: self.preserveTimestamps
         )
         let task = Task {
             await optimizer.optimize(file: file, level: level, overrides: overrides)

@@ -6,8 +6,9 @@ struct QualityOverrides: Sendable {
     let jpegQuality: Int
     let pngLossy: Bool
     let pngQuality: Int
+    let preserveTimestamps: Bool
 
-    static let none = QualityOverrides(useCustom: false, jpegLossy: false, jpegQuality: 85, pngLossy: false, pngQuality: 80)
+    static let none = QualityOverrides(useCustom: false, jpegLossy: false, jpegQuality: 85, pngLossy: false, pngQuality: 80, preserveTimestamps: true)
 
     /// Returns effective JPEG lossy setting (override or level default)
     func effectiveJPEGLossy(level: OptimizationLevel) -> Bool {

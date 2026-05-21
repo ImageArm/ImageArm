@@ -84,6 +84,7 @@ Chaque outil produit un resultat. **Le fichier le plus leger gagne.** Votre orig
 - **Quick Action Finder** — Clic droit > Optimiser avec ImageArm
 - **Notification macOS** — Alerte quand le batch est termine
 - **Console de logs** — Suivez chaque etape du pipeline en temps reel, copiez tout en un clic
+- **Préservation des dates** — Option (activée par défaut) pour conserver les dates de création et de modification originales après optimisation
 - **Zero dependance runtime** — Les outils CLI sont installés via Homebrew/npm, détectés automatiquement
 - **Concurrent** — Traitement parallele via Swift `TaskGroup`
 - **WCAG AA** — Interface accessible
@@ -225,6 +226,7 @@ Every tool produces a result. **The lightest file wins.** Your original is atomi
 - **Finder Quick Action** — Right-click > Optimize with ImageArm
 - **macOS notifications** — Get alerted when batch processing completes
 - **Live log console** — Watch every pipeline step in real time, copy all logs in one click
+- **File date preservation** — Option (enabled by default) to keep original creation and modification dates after optimization
 - **Zero runtime dependencies** — CLI tools are installed via Homebrew/npm and auto-detected
 - **Concurrent** — Parallel processing via Swift `TaskGroup`
 - **WCAG AA** — Accessible interface

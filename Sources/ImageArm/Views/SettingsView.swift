@@ -98,6 +98,10 @@ struct SettingsView: View {
                     }
                     .pickerStyle(.segmented)
                 }
+
+                Section("Fichiers") {
+                    Toggle("Préserver les dates originales des fichiers", isOn: $store.preserveTimestamps)
+                }
             }
             .formStyle(.grouped)
             .padding(.horizontal)

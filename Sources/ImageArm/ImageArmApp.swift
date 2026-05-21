@@ -170,10 +170,17 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
         let optimizer = ImageOptimizer()
         let level = store.level
-
         let maxConc = store.maxConcurrent
+        let overrides = QualityOverrides(
+            useCustom: store.useCustomQuality,
+            jpegLossy: store.jpegLossyOverride,
+            jpegQuality: Int(store.jpegQualityCustom),
+            pngLossy: store.pngLossyOverride,
+            pngQuality: Int(store.pngQualityCustom),
+            preserveTimestamps: store.preserveTimestamps
+        )
         await withBoundedConcurrency(over: pending, maxConcurrent: maxConc) { file in
-            await optimizer.optimize(file: file, level: level)
+            await optimizer.optimize(file: file, level: level, overrides: overrides)
         }
 
         // Résumé

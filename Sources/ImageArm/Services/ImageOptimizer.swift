@@ -16,12 +16,12 @@ actor ImageOptimizer {
         switch file.format {
         case .png:   await optimizePNG(file: file, level: level, overrides: overrides)
         case .jpeg:  await optimizeJPEG(file: file, level: level, overrides: overrides)
-        case .heif:  await optimizeHEIF(file: file, level: level)
-        case .gif:   await optimizeGIF(file: file, level: level)
-        case .tiff:  await optimizeTIFF(file: file, level: level)
-        case .avif:  await optimizeAVIF(file: file, level: level)
-        case .svg:   await optimizeSVG(file: file, level: level)
-        case .webp:  await optimizeWebP(file: file, level: level)
+        case .heif:  await optimizeHEIF(file: file, level: level, overrides: overrides)
+        case .gif:   await optimizeGIF(file: file, level: level, overrides: overrides)
+        case .tiff:  await optimizeTIFF(file: file, level: level, overrides: overrides)
+        case .avif:  await optimizeAVIF(file: file, level: level, overrides: overrides)
+        case .svg:   await optimizeSVG(file: file, level: level, overrides: overrides)
+        case .webp:  await optimizeWebP(file: file, level: level, overrides: overrides)
         case .unknown:
             await MainActor.run { file.status = .failed(String(localized: "Format non supporté")) }
         }
@@ -107,7 +107,7 @@ actor ImageOptimizer {
 
         // pngcrush retiré — Benchmark 2026-03-31: 0/50 victoires
 
-        await finalize(file: file, originalPath: path, bestPath: bestPath, bestSize: bestSize)
+        await finalize(file: file, originalPath: path, bestPath: bestPath, bestSize: bestSize, overrides: overrides)
     }
 
     // MARK: - JPEG
@@ -171,12 +171,12 @@ actor ImageOptimizer {
             cleanupIfNot(mozOut, keep: bestPath)
         }
 
-        await finalize(file: file, originalPath: path, bestPath: bestPath, bestSize: bestSize)
+        await finalize(file: file, originalPath: path, bestPath: bestPath, bestSize: bestSize, overrides: overrides)
     }
 
     // MARK: - HEIF
 
-    private func optimizeHEIF(file: ImageFile, level: OptimizationLevel) async {
+    private func optimizeHEIF(file: ImageFile, level: OptimizationLevel, overrides: QualityOverrides) async {
         let path = file.url.path
         let tempPath = path + ".imagearm.tmp"
         let total = actualHEIFSteps(level: level)
@@ -234,7 +234,7 @@ actor ImageOptimizer {
             cleanupIfNot(losslessOut, keep: bestPath)
         }
 
-        await finalize(file: file, originalPath: path, bestPath: bestPath, bestSize: bestSize)
+        await finalize(file: file, originalPath: path, bestPath: bestPath, bestSize: bestSize, overrides: overrides)
     }
 
     private func actualHEIFSteps(level: OptimizationLevel) -> Int {
@@ -248,7 +248,7 @@ actor ImageOptimizer {
 
     // MARK: - GIF
 
-    private func optimizeGIF(file: ImageFile, level: OptimizationLevel) async {
+    private func optimizeGIF(file: ImageFile, level: OptimizationLevel, overrides: QualityOverrides) async {
         let path = file.url.path
         guard let gifsicle = toolManager.find("gifsicle") else {
             optiLog("\(file.url.lastPathComponent) : gifsicle non disponible, ignoré", level: .info)
@@ -274,7 +274,7 @@ actor ImageOptimizer {
 
         let newSize = fileSize(tempOut)
         if newSize < origSize && newSize > 0 {
-            await safeReplace(file: file, originalPath: path, optimizedPath: tempOut, originalSize: origSize, optimizedSize: newSize)
+            await safeReplace(file: file, originalPath: path, optimizedPath: tempOut, originalSize: origSize, optimizedSize: newSize, preserveTimestamps: overrides.preserveTimestamps)
         } else {
             optiLog(String(localized: "\(file.url.lastPathComponent) : déjà optimal (\(formatBytes(origSize)))"), level: .info)
             await MainActor.run { file.status = .alreadyOptimal }
@@ -283,7 +283,7 @@ actor ImageOptimizer {
 
     // MARK: - TIFF
 
-    private func optimizeTIFF(file: ImageFile, level: OptimizationLevel) async {
+    private func optimizeTIFF(file: ImageFile, level: OptimizationLevel, overrides: QualityOverrides) async {
         let path = file.url.path
         guard let tiffutil = toolManager.find("tiffutil") else {
             optiLog("\(file.url.lastPathComponent) : tiffutil non disponible, ignoré", level: .info)
@@ -305,7 +305,7 @@ actor ImageOptimizer {
 
         let newSize = fileSize(tempOut)
         if newSize < origSize && newSize > 0 {
-            await safeReplace(file: file, originalPath: path, optimizedPath: tempOut, originalSize: origSize, optimizedSize: newSize)
+            await safeReplace(file: file, originalPath: path, optimizedPath: tempOut, originalSize: origSize, optimizedSize: newSize, preserveTimestamps: overrides.preserveTimestamps)
         } else {
             optiLog(String(localized: "\(file.url.lastPathComponent) : déjà optimal (\(formatBytes(origSize)))"), level: .info)
             await MainActor.run { file.status = .alreadyOptimal }
@@ -314,7 +314,7 @@ actor ImageOptimizer {
 
     // MARK: - AVIF
 
-    private func optimizeAVIF(file: ImageFile, level: OptimizationLevel) async {
+    private func optimizeAVIF(file: ImageFile, level: OptimizationLevel, overrides: QualityOverrides) async {
         let path = file.url.path
         let tempPath = path + ".imagearm.tmp"
         let total = actualAVIFSteps(level: level)
@@ -371,7 +371,7 @@ actor ImageOptimizer {
             cleanupIfNot(maxOut, keep: bestPath)
         }
 
-        await finalize(file: file, originalPath: path, bestPath: bestPath, bestSize: bestSize)
+        await finalize(file: file, originalPath: path, bestPath: bestPath, bestSize: bestSize, overrides: overrides)
     }
 
     private func actualAVIFSteps(level: OptimizationLevel) -> Int {
@@ -385,7 +385,7 @@ actor ImageOptimizer {
 
     // MARK: - SVG
 
-    private func optimizeSVG(file: ImageFile, level: OptimizationLevel) async {
+    private func optimizeSVG(file: ImageFile, level: OptimizationLevel, overrides: QualityOverrides) async {
         let path = file.url.path
         guard let svgo = toolManager.find("svgo") else {
             optiLog("\(file.url.lastPathComponent) : svgo non disponible, ignoré", level: .info)
@@ -408,7 +408,7 @@ actor ImageOptimizer {
 
         let newSize = fileSize(tempOut)
         if newSize < origSize && newSize > 0 {
-            await safeReplace(file: file, originalPath: path, optimizedPath: tempOut, originalSize: origSize, optimizedSize: newSize)
+            await safeReplace(file: file, originalPath: path, optimizedPath: tempOut, originalSize: origSize, optimizedSize: newSize, preserveTimestamps: overrides.preserveTimestamps)
         } else {
             optiLog(String(localized: "\(file.url.lastPathComponent) : déjà optimal (\(formatBytes(origSize)))"), level: .info)
             await MainActor.run { file.status = .alreadyOptimal }
@@ -417,7 +417,7 @@ actor ImageOptimizer {
 
     // MARK: - WebP
 
-    private func optimizeWebP(file: ImageFile, level: OptimizationLevel) async {
+    private func optimizeWebP(file: ImageFile, level: OptimizationLevel, overrides: QualityOverrides) async {
         let path = file.url.path
         guard let cwebp = toolManager.find("cwebp") else {
             optiLog("\(file.url.lastPathComponent) : cwebp non disponible, ignoré", level: .info)
@@ -445,7 +445,7 @@ actor ImageOptimizer {
         let origSize = fileSize(path)
         let newSize = fileSize(tempOut)
         if newSize < origSize && newSize > 0 {
-            await safeReplace(file: file, originalPath: path, optimizedPath: tempOut, originalSize: origSize, optimizedSize: newSize)
+            await safeReplace(file: file, originalPath: path, optimizedPath: tempOut, originalSize: origSize, optimizedSize: newSize, preserveTimestamps: overrides.preserveTimestamps)
         } else {
             optiLog(String(localized: "\(file.url.lastPathComponent) : déjà optimal (\(formatBytes(origSize)))"), level: .info)
             await MainActor.run { file.status = .alreadyOptimal }
@@ -454,11 +454,11 @@ actor ImageOptimizer {
 
     // MARK: - Helpers
 
-    private func finalize(file: ImageFile, originalPath: String, bestPath: String, bestSize: Int64) async {
+    private func finalize(file: ImageFile, originalPath: String, bestPath: String, bestSize: Int64, overrides: QualityOverrides) async {
         let originalSize = fileSize(originalPath)
 
         if bestSize < originalSize && bestSize > 0 && bestPath != originalPath {
-            await safeReplace(file: file, originalPath: originalPath, optimizedPath: bestPath, originalSize: originalSize, optimizedSize: bestSize)
+            await safeReplace(file: file, originalPath: originalPath, optimizedPath: bestPath, originalSize: originalSize, optimizedSize: bestSize, preserveTimestamps: overrides.preserveTimestamps)
         } else {
             let name = URL(fileURLWithPath: originalPath).lastPathComponent
             let formattedSize = formatBytes(originalSize)
@@ -468,8 +468,11 @@ actor ImageOptimizer {
     }
 
     /// Safe in-place replace: backup original, move optimized, trash backup
-    private func safeReplace(file: ImageFile, originalPath: String, optimizedPath: String, originalSize: Int64, optimizedSize: Int64) async {
+    private func safeReplace(file: ImageFile, originalPath: String, optimizedPath: String, originalSize: Int64, optimizedSize: Int64, preserveTimestamps: Bool) async {
         let name = URL(fileURLWithPath: originalPath).lastPathComponent
+        let originalAttrs = preserveTimestamps
+            ? (try? FileManager.default.attributesOfItem(atPath: originalPath))
+            : nil
         let backupPath = originalPath + ".imagearm.backup"
         do {
             try FileManager.default.moveItem(atPath: originalPath, toPath: backupPath)
@@ -477,6 +480,18 @@ actor ImageOptimizer {
             try? FileManager.default.trashItem(at: URL(fileURLWithPath: backupPath), resultingItemURL: nil)
             if FileManager.default.fileExists(atPath: backupPath) {
                 try? FileManager.default.removeItem(atPath: backupPath)
+            }
+            if let attrs = originalAttrs {
+                var tsAttrs: [FileAttributeKey: Any] = [:]
+                if let cd = attrs[.creationDate] { tsAttrs[.creationDate] = cd }
+                if let md = attrs[.modificationDate] { tsAttrs[.modificationDate] = md }
+                if !tsAttrs.isEmpty {
+                    do {
+                        try FileManager.default.setAttributes(tsAttrs, ofItemAtPath: originalPath)
+                    } catch {
+                        optiLog(String(localized: "\(name) : impossible de restaurer les dates (\(error.localizedDescription))"), level: .warning)
+                    }
+                }
             }
             let saved = originalSize - optimizedSize
             let pct = originalSize > 0 ? Double(saved) / Double(originalSize) * 100 : 0

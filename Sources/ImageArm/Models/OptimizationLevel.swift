@@ -262,6 +262,8 @@ enum OptimizationLevel: Int, CaseIterable, Identifiable, Codable {
             return 1
         case .webp:
             return 1
+        case .icns:
+            return 2
         case .unknown:
             return 0
         }

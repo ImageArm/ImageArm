@@ -22,6 +22,7 @@ actor ImageOptimizer {
         case .avif:  await optimizeAVIF(file: file, level: level, overrides: overrides)
         case .svg:   await optimizeSVG(file: file, level: level, overrides: overrides)
         case .webp:  await optimizeWebP(file: file, level: level, overrides: overrides)
+        case .icns:  await optimizeICNS(file: file, level: level, overrides: overrides)
         case .unknown:
             await MainActor.run { file.status = .failed(String(localized: "Format non supporté")) }
         }
@@ -306,6 +307,88 @@ actor ImageOptimizer {
         let newSize = fileSize(tempOut)
         if newSize < origSize && newSize > 0 {
             await safeReplace(file: file, originalPath: path, optimizedPath: tempOut, originalSize: origSize, optimizedSize: newSize, preserveTimestamps: overrides.preserveTimestamps)
+        } else {
+            optiLog(String(localized: "\(file.url.lastPathComponent) : déjà optimal (\(formatBytes(origSize)))"), level: .info)
+            await MainActor.run { file.status = .alreadyOptimal }
+        }
+    }
+
+    // MARK: - ICNS
+
+    private func optimizeICNS(file: ImageFile, level: OptimizationLevel, overrides: QualityOverrides) async {
+        let path = file.url.path
+        guard let iconutil = toolManager.find("iconutil") else {
+            optiLog("\(file.url.lastPathComponent) : iconutil non disponible, ignoré", level: .info)
+            await MainActor.run { file.status = .alreadyOptimal }
+            return
+        }
+
+        let tmpIconset = path + ".imagearm.iconset"
+        let tempOut    = path + ".imagearm.icns"
+        defer {
+            try? FileManager.default.removeItem(atPath: tmpIconset)
+            try? FileManager.default.removeItem(atPath: tempOut)
+        }
+
+        let origSize = fileSize(path)
+
+        // Supprimer un éventuel dossier orphelin d'un run précédent (crash sans defer).
+        // Sans cette ligne, iconutil échouerait avec "file exists".
+        try? FileManager.default.removeItem(atPath: tmpIconset)
+
+        // Étape 1 : extraire .icns → .iconset (dossier de PNGs)
+        await setProcessing(file, "iconutil", step: 1, total: 2)
+        let extractResult = await run(iconutil, args: ["-c", "iconset", path, "-o", tmpIconset])
+        guard extractResult.exitCode == 0 else {
+            await setFailed(file, extractResult.stderr.prefix(200).description)
+            return
+        }
+
+        // Lire le contenu du .iconset (F1: découpler oxipng de la lecture du répertoire)
+        guard let allEntries = try? FileManager.default.contentsOfDirectory(atPath: tmpIconset) else {
+            await setFailed(file, "Impossible de lire le .iconset temporaire")
+            return
+        }
+        // Fichiers .icns legacy (sans ressources PNG) → pas de compression possible (F3)
+        guard allEntries.contains(where: { $0.hasSuffix(".png") }) else {
+            optiLog("\(file.url.lastPathComponent) : .icns sans ressources PNG (format legacy), ignoré", level: .info)
+            await MainActor.run { file.status = .alreadyOptimal }
+            return
+        }
+
+        // Optimiser chaque PNG du .iconset avec oxipng (in-place)
+        if let oxipng = toolManager.find("oxipng") {
+            let pngs = allEntries.filter { $0.hasSuffix(".png") }
+            for png in pngs {
+                let pngPath = (tmpIconset as NSString).appendingPathComponent(png)
+                var args = ["-o", "\(level.oxipngLevel)", "--threads", "1"]
+                if overrides.effectiveStripMetadata(level: level) { args += ["--strip", "safe"] }
+                args.append(pngPath)
+                _ = await run(oxipng, args: args)
+            }
+        } else {
+            optiLog("\(file.url.lastPathComponent) : oxipng non disponible, optimisation PNG ignorée (iconutil seul)", level: .info)
+        }
+
+        // Vérifier la cancellation avant l'étape de recompilation (F2)
+        guard !Task.isCancelled else {
+            await MainActor.run { file.status = .pending }
+            return
+        }
+
+        // Étape 2 : recompiler .iconset → .icns
+        await setProcessing(file, "iconutil", step: 2, total: 2)
+        let compileResult = await run(iconutil, args: ["-c", "icns", tmpIconset, "-o", tempOut])
+        guard compileResult.exitCode == 0 else {
+            await setFailed(file, compileResult.stderr.prefix(200).description)
+            return
+        }
+
+        let newSize = fileSize(tempOut)
+        if newSize < origSize && newSize > 0 {
+            await safeReplace(file: file, originalPath: path, optimizedPath: tempOut,
+                              originalSize: origSize, optimizedSize: newSize,
+                              preserveTimestamps: overrides.preserveTimestamps)
         } else {
             optiLog(String(localized: "\(file.url.lastPathComponent) : déjà optimal (\(formatBytes(origSize)))"), level: .info)
             await MainActor.run { file.status = .alreadyOptimal }

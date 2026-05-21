@@ -12,6 +12,7 @@ enum DesignTokens {
         static let avif = Color.mint
         static let svg = Color.teal
         static let webp = Color.cyan
+        static let icns = Color.brown
         static let unknown = Color.gray
     }
 
@@ -45,6 +46,7 @@ extension ImageFormat {
         case .avif: return DesignTokens.FormatColor.avif
         case .svg: return DesignTokens.FormatColor.svg
         case .webp: return DesignTokens.FormatColor.webp
+        case .icns: return DesignTokens.FormatColor.icns
         case .unknown: return DesignTokens.FormatColor.unknown
         }
     }

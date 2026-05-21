@@ -96,7 +96,7 @@ actor ImageOptimizer {
             await setProcessing(file, "oxipng", step: step, total: total)
             let oxiOut = tempPath + ".oxi.png"
             var args = ["-o", "\(level.oxipngLevel)", "--threads", "1"]
-            if level.stripMetadata { args += ["--strip", "safe"] }
+            if overrides.effectiveStripMetadata(level: level) { args += ["--strip", "safe"] }
             args.append(oxiOut)
             let result = await run(oxipng, args: args)
             if result.exitCode == 0 {
@@ -139,7 +139,7 @@ actor ImageOptimizer {
                     inputPath: tempPath,
                     outputPath: gpuOut,
                     quality: jpegQ,
-                    stripMetadata: level.stripMetadata
+                    stripMetadata: overrides.effectiveStripMetadata(level: level)
                 )
                 bestPath = keepBest(&bestSize, candidate: gpuOut, current: bestPath, tempBase: tempPath)
             } catch {
@@ -159,7 +159,7 @@ actor ImageOptimizer {
             await setProcessing(file, "mozjpeg", step: step, total: total)
             let mozOut = tempPath + ".moz.jpg"
             var args = [
-                "-copy", level.stripMetadata ? "none" : "all",
+                "-copy", overrides.effectiveStripMetadata(level: level) ? "none" : "all",
                 "-optimize",
             ]
             if level.jpegProgressive { args.append("-progressive") }
@@ -202,7 +202,7 @@ actor ImageOptimizer {
                     inputPath: tempPath,
                     outputPath: lossyOut,
                     quality: level.heifQuality,
-                    stripMetadata: level.stripMetadata
+                    stripMetadata: overrides.effectiveStripMetadata(level: level)
                 )
                 bestPath = keepBest(&bestSize, candidate: lossyOut, current: bestPath, tempBase: tempPath)
             } catch {
@@ -225,7 +225,7 @@ actor ImageOptimizer {
                 try gpu.encodeHEIFMaxQuality(
                     inputPath: tempPath,
                     outputPath: losslessOut,
-                    stripMetadata: level.stripMetadata
+                    stripMetadata: overrides.effectiveStripMetadata(level: level)
                 )
                 bestPath = keepBest(&bestSize, candidate: losslessOut, current: bestPath, tempBase: tempPath)
             } catch {
@@ -263,7 +263,7 @@ actor ImageOptimizer {
         let origSize = fileSize(path)
         var args = ["--optimize=\(level.gifOptimizeLevel)"]
         if level.gifLossy { args.append("--lossy=\(level.gifLossyLevel)") }
-        if level.stripMetadata { args.append("--no-comments") }
+        if overrides.effectiveStripMetadata(level: level) { args.append("--no-comments") }
         args += [path, "--output", tempOut]
 
         let result = await run(gifsicle, args: args)
@@ -339,7 +339,7 @@ actor ImageOptimizer {
                     inputPath: tempPath,
                     outputPath: lossyOut,
                     quality: level.avifQuality,
-                    stripMetadata: level.stripMetadata
+                    stripMetadata: overrides.effectiveStripMetadata(level: level)
                 )
                 bestPath = keepBest(&bestSize, candidate: lossyOut, current: bestPath, tempBase: tempPath)
             } catch {
@@ -362,7 +362,7 @@ actor ImageOptimizer {
                 try gpu.encodeAVIFMaxQuality(
                     inputPath: tempPath,
                     outputPath: maxOut,
-                    stripMetadata: level.stripMetadata
+                    stripMetadata: overrides.effectiveStripMetadata(level: level)
                 )
                 bestPath = keepBest(&bestSize, candidate: maxOut, current: bestPath, tempBase: tempPath)
             } catch {
@@ -400,6 +400,20 @@ actor ImageOptimizer {
         let origSize = fileSize(path)
         var args = ["-i", path, "-o", tempOut]
         if level.svgoMultipass { args.append("--multipass") }
+        if !overrides.effectiveStripMetadata(level: level) {
+            let svgoConfigURL = FileManager.default.temporaryDirectory
+                .appendingPathComponent("imagearm-svgo-preserve.mjs")
+            let config = """
+            export default {
+              plugins: [{
+                name: 'preset-default',
+                params: { overrides: { removeComments: false, removeMetadata: false } }
+              }]
+            }
+            """
+            try? config.write(to: svgoConfigURL, atomically: true, encoding: .utf8)
+            args += ["--config", svgoConfigURL.path]
+        }
         let result = await run(svgo, args: args)
         guard result.exitCode == 0 else {
             await setFailed(file, result.stderr.prefix(200).description)
@@ -435,6 +449,7 @@ actor ImageOptimizer {
         } else {
             args = ["-q", "\(level.webpQuality)", "-m", "\(level.webpCompressionLevel)", path, "-o", tempOut]
         }
+        if !overrides.effectiveStripMetadata(level: level) { args += ["-metadata", "all"] }
 
         let result = await run(cwebp, args: args)
         guard result.exitCode == 0 else {

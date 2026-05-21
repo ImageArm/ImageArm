@@ -177,7 +177,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             jpegQuality: Int(store.jpegQualityCustom),
             pngLossy: store.pngLossyOverride,
             pngQuality: Int(store.pngQualityCustom),
-            preserveTimestamps: store.preserveTimestamps
+            preserveTimestamps: store.preserveTimestamps,
+            preserveMetadata: store.preserveMetadata
         )
         await withBoundedConcurrency(over: pending, maxConcurrent: maxConc) { file in
             await optimizer.optimize(file: file, level: level, overrides: overrides)

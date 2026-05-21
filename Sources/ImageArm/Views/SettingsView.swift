@@ -44,7 +44,7 @@ struct SettingsView: View {
             Divider()
 
             // Detail panel for selected level
-            LevelDetailView(level: store.level)
+            LevelDetailView(level: store.level, preserveMetadata: store.preserveMetadata)
                 .padding()
 
             Divider()
@@ -101,6 +101,7 @@ struct SettingsView: View {
 
                 Section("Fichiers") {
                     Toggle("Préserver les dates originales des fichiers", isOn: $store.preserveTimestamps)
+                    Toggle("Préserver les métadonnées (EXIF, profil couleur)", isOn: $store.preserveMetadata)
                 }
             }
             .formStyle(.grouped)
@@ -197,6 +198,7 @@ struct LevelButton: View {
 
 struct LevelDetailView: View {
     let level: OptimizationLevel
+    var preserveMetadata: Bool = true
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -233,7 +235,7 @@ struct LevelDetailView: View {
                 }
                 GridRow {
                     Text("Méta").font(.caption).fontWeight(.bold).foregroundStyle(.gray)
-                    Text(level.stripMetadata ? "Suppression EXIF, commentaires, profils" : "Conservation des métadonnées")
+                    Text(level.stripMetadata && !preserveMetadata ? "Suppression EXIF, commentaires, profils" : "Conservation des métadonnées")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }

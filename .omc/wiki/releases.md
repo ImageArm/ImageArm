@@ -2,10 +2,20 @@
 title: Historique des releases
 category: session-log
 tags: [release, changelog, version]
-updated: 2026-04-17
+updated: 2026-05-21
 ---
 
 # Historique des releases ImageArm
+
+## v1.3.3 (build 10) — 2026-05-21
+
+**Feat : préserver les dates des fichiers lors de l'optimisation**
+
+- Nouveau toggle "Préserver les dates originales des fichiers" dans Settings → Optimisation → section "Fichiers" (activé par défaut)
+- `safeReplace()` capture les timestamps avant remplacement et les restaure via `FileManager.setAttributes`
+- Propagation via `QualityOverrides.preserveTimestamps`, persisté avec `@AppStorage`
+- Tous les formats : PNG, JPEG, HEIF, GIF, TIFF, AVIF, SVG, WebP + mode headless
+- Clôture issue #5
 
 ## v1.3.1 (build 8) — 2026-04-17
 

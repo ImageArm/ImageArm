@@ -1,6 +1,6 @@
 # Guide de développement — ImageArm
 
-> Mis à jour le 2026-03-31
+> Mis à jour le 2026-05-21
 
 ## Prérequis
 
@@ -118,6 +118,7 @@ Voir [Arborescence source](./source-tree-analysis.md) pour le détail complet.
 | Metal inline shaders | String source compilée runtime | Évite la complexité d'un bundle .metallib |
 | Pipeline compétitif | keepBest() | Le plus petit résultat gagne, maximise la compression |
 | Outils CLI optionnels | Graceful degradation | L'app reste fonctionnelle sans outils installés |
+| preserveMetadata | Toggle global AppStorage (défaut `true`) | Préserve EXIF/ICC/commentaires sur tous les formats — cwebp : flag `-metadata all` (inverse) ; svgo : config `.mjs` dans temp dir per-user |
 
 ## Notarisation (distribution hors App Store)
 

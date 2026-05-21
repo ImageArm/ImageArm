@@ -7,6 +7,21 @@ updated: 2026-05-21
 
 # Historique des releases ImageArm
 
+## v1.4.0 (build 11) — 2026-05-21
+
+**Feat : préserver les métadonnées (EXIF, profils couleur, commentaires SVG)**
+
+- Nouveau toggle "Préserver les métadonnées (EXIF, profil couleur)" dans Settings → Fichiers (activé par défaut)
+- `QualityOverrides.preserveMetadata` + `effectiveStripMetadata(level:)` — préserve indépendamment du niveau
+- 8 call sites `level.stripMetadata` remplacés par `overrides.effectiveStripMetadata(level:)` dans `ImageOptimizer`
+- **cwebp** : `-metadata all` ajouté quand préservation active (défaut cwebp = strip, logique inverse)
+- **svgo v4** : config `.mjs` écrite dans `FileManager.default.temporaryDirectory` avec `removeComments: false, removeMetadata: false`
+- `LevelDetailView` reflète le comportement effectif (toggle global prime sur le niveau)
+- `@AppStorage("preserveMetadata")` — persisté entre les sessions
+- Migration : les utilisateurs existants voient leurs métadonnées préservées par défaut (changement silencieux pour standard/high/ultra)
+- Limitation connue : `pngquant --strip` (hardcodé) supprime les métadonnées même si toggle activé
+- Clôture issue #4
+
 ## v1.3.3 (build 10) — 2026-05-21
 
 **Feat : préserver les dates des fichiers lors de l'optimisation**

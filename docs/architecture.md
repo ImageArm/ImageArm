@@ -1,6 +1,6 @@
 # Architecture — ImageArm
 
-> Mis à jour le 2026-03-31
+> Mis à jour le 2026-05-21
 
 ## Résumé
 
@@ -34,7 +34,8 @@ ImageArm est une application macOS native (SwiftUI, macOS 14+) qui optimise des 
 │  (@MainActor)        │   (singleton)                 │
 ├──────────────────────┴──────────────────────────────┤
 │                   Models                             │
-│  ImageFile, OptimizationLevel, QualityOverrides      │
+│  ImageFile, OptimizationLevel, QualityOverrides       │
+│  (preserveTimestamps, preserveMetadata, effectiveStripMetadata) │
 ├─────────────────────────────────────────────────────┤
 │                  Services                            │
 │  ImageOptimizer (actor) ←── ToolManager (Sendable)  │
@@ -90,10 +91,10 @@ Pour chaque image, plusieurs outils s'exécutent séquentiellement. Chaque outil
 2. **GPU qualité 95** (toujours) — Encodage AVIF haute qualité
 
 #### SVG (1 étape)
-1. **svgo** — Optimisation SVG (minification, nettoyage)
+1. **svgo** — Optimisation SVG (minification, nettoyage). Quand `preserveMetadata = true`, une config `.mjs` est écrite dans `FileManager.default.temporaryDirectory` avec `removeComments: false, removeMetadata: false`.
 
 #### WebP (1 étape)
-1. **cwebp** — Recompression lossless ou lossy
+1. **cwebp** — Recompression lossless ou lossy. ⚠️ Comportement inverse des autres outils : le défaut cwebp est `-metadata none` (strip). `-metadata all` est ajouté quand `preserveMetadata = true`.
 
 ### Gestion des fichiers temporaires
 

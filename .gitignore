@@ -27,6 +27,11 @@ tools/submodules/*/build-arm64/
 tools/submodules/*/node_modules/
 tools/submodules/*/dist/
 
+# OMC (oh-my-claudecode) runtime state — seul .omc/wiki/ est tracké
+.omc/project-memory.json
+.omc/sessions/
+.omc/state/
+
 # BMAD project management (internal)
 _bmad/
 _bmad-output/

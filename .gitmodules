@@ -16,3 +16,6 @@
 [submodule "tools/submodules/pngcrush"]
 	path = tools/submodules/pngcrush
 	url = https://github.com/Kjuly/pngcrush.git
+[submodule "tools/submodules/gifsicle"]
+	path = tools/submodules/gifsicle
+	url = https://github.com/kohler/gifsicle.git

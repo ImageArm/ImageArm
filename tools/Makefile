@@ -22,7 +22,7 @@ export MACOSX_DEPLOYMENT_TARGET
 # Identité Developer ID (lue depuis l'env ou détectée via le keychain)
 DEVELOPER_ID ?= $(shell security find-identity -v -p codesigning 2>/dev/null | grep "Developer ID Application" | head -1 | grep -oE '"[^"]+"' | tr -d '"' || echo "")
 
-TOOLS := $(BIN)/pngquant $(BIN)/oxipng $(BIN)/pngcrush $(BIN)/cjpeg $(BIN)/jpegtran $(BIN)/svgo $(BIN)/cwebp
+TOOLS := $(BIN)/pngquant $(BIN)/oxipng $(BIN)/pngcrush $(BIN)/cjpeg $(BIN)/jpegtran $(BIN)/svgo $(BIN)/cwebp $(BIN)/gifsicle
 
 # Apple ID pour notarisation (lire depuis env)
 APPLE_ID ?=
@@ -48,6 +48,7 @@ check-deps:
 	rustup target list --installed 2>/dev/null | grep -q aarch64-apple-darwin || { echo "  ❌ target Rust arm64 manquant : rustup target add aarch64-apple-darwin"; MISSING=1; }; \
 	command -v bun >/dev/null 2>&1 || { echo "  ❌ bun manquant — installer Bun : brew install oven-sh/bun/bun"; MISSING=1; }; \
 	command -v cmake >/dev/null 2>&1 || { echo "  ❌ cmake manquant : brew install cmake"; MISSING=1; }; \
+	command -v autoreconf >/dev/null 2>&1 || { echo "  ❌ autoreconf manquant : brew install autoconf automake"; MISSING=1; }; \
 	command -v pkg-config >/dev/null 2>&1 || { echo "  ⚠️  pkg-config manquant : brew install pkg-config"; }; \
 	command -v nasm >/dev/null 2>&1 || echo "  ℹ️  nasm absent (mozjpeg SIMD désactivé) : brew install nasm"; \
 	[ "$$MISSING" -eq 0 ] && echo "✅ Prérequis essentiels OK" || { echo ""; echo "❌ Prérequis manquants — corriger avant de lancer 'make tools'"; exit 1; }
@@ -80,6 +81,9 @@ $(BIN)/svgo:
 
 $(BIN)/cwebp:
 	@bash "$(SCRIPTS)/build-cwebp.sh"
+
+$(BIN)/gifsicle:
+	@bash "$(SCRIPTS)/build-gifsicle.sh"
 
 # ── Signature code ─────────────────────────────────────────────────────────────
 

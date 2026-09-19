@@ -2,10 +2,28 @@
 title: Procédure de release
 category: pattern
 tags: [release, git, homebrew, dmg]
-updated: 2026-04-17
+updated: 2026-09-19
 ---
 
 # Procédure de release ImageArm
+
+## Prérequis (dépôt fraîchement cloné)
+
+⚠️ `make dmg` **ne compile pas** les outils CLI — il se contente de les copier depuis `tools/bin/`, qui est gitignoré. Sans cette étape, le build Release échoue sur `PhaseScriptExecution Copier outils CLI`.
+
+```bash
+git submodule update --init --recursive
+brew install rust oven-sh/bun/bun cmake autoconf automake
+make -f tools/Makefile tools    # compile les 8 binaires (~5 min)
+```
+
+Vérifier ensuite que la suite est verte — elle tourne contre les binaires embarqués :
+
+```bash
+xcodebuild -project ImageArm.xcodeproj -scheme ImageArm -destination 'platform=macOS' test
+```
+
+> Les 2 tests `GPUBenchmarkTests` sont `skipped` tant que le corpus `Tests/fixtures/benchmark/` est vide (images gitignorées) — c'est normal.
 
 ## Étapes
 

@@ -24,6 +24,12 @@ final class AppDelegateTests: XCTestCase {
 
     // MARK: - Helpers
 
+    /// `application(_:open:)` applique un debounce de 250 ms (v1.3.2) avant de
+    /// vider `batchURLs`. Les tests doivent attendre au-delà de cette fenêtre.
+    private func settleDebounce() async {
+        try? await Task.sleep(for: .milliseconds(400))
+    }
+
     private func makeFile(_ name: String) throws -> URL {
         let url = tempDir.appendingPathComponent(name)
         try "fake".write(to: url, atomically: true, encoding: .utf8)
@@ -40,9 +46,7 @@ final class AppDelegateTests: XCTestCase {
         delegate.store = store
         delegate.application(NSApplication.shared, open: [png1, png2, png3])
 
-        // Laisse les Task @MainActor se terminer
-        await Task.yield()
-        await Task.yield()
+        await settleDebounce()
 
         XCTAssertEqual(store.files.count, 3, "Les 3 fichiers doivent être ajoutés en un seul appel")
     }
@@ -56,13 +60,13 @@ final class AppDelegateTests: XCTestCase {
         // Store pas encore assigné — simule le démarrage de l'app
         delegate.application(NSApplication.shared, open: [png1, jpg1])
 
-        await Task.yield()
+        await settleDebounce()
 
         // Store nil : rien dans store, mais processPendingFiles doit transférer
         delegate.store = store
         delegate.processPendingFiles()
 
-        await Task.yield()
+        await settleDebounce()
 
         XCTAssertEqual(store.files.count, 2, "Les fichiers en attente doivent être transférés au store")
     }
@@ -73,15 +77,15 @@ final class AppDelegateTests: XCTestCase {
         let png = try makeFile("z.png")
 
         delegate.application(NSApplication.shared, open: [png])
-        await Task.yield()
+        await settleDebounce()
 
         delegate.store = store
         delegate.processPendingFiles()
-        await Task.yield()
+        await settleDebounce()
 
         // Un 2e appel ne doit rien ajouter (queue vidée)
         delegate.processPendingFiles()
-        await Task.yield()
+        await settleDebounce()
 
         XCTAssertEqual(store.files.count, 1, "processPendingFiles ne doit traiter les fichiers qu'une seule fois")
     }
@@ -96,8 +100,7 @@ final class AppDelegateTests: XCTestCase {
         delegate.store = store
         delegate.application(NSApplication.shared, open: [png, txt, pdf])
 
-        await Task.yield()
-        await Task.yield()
+        await settleDebounce()
 
         XCTAssertEqual(store.files.count, 1, "Seul le PNG doit être accepté")
     }
@@ -111,7 +114,7 @@ final class AppDelegateTests: XCTestCase {
         delegate.store = store
         delegate.application(NSApplication.shared, open: [txt, pdf])
 
-        await Task.yield()
+        await settleDebounce()
 
         XCTAssertTrue(store.files.isEmpty, "Aucun fichier non supporté ne doit être ajouté")
     }
@@ -120,7 +123,7 @@ final class AppDelegateTests: XCTestCase {
         delegate.store = store
         delegate.application(NSApplication.shared, open: [])
 
-        await Task.yield()
+        await settleDebounce()
 
         XCTAssertTrue(store.files.isEmpty)
     }
@@ -138,8 +141,7 @@ final class AppDelegateTests: XCTestCase {
         delegate.store = store
         delegate.application(NSApplication.shared, open: [png, jpg, heic, svg, webp, txt])
 
-        await Task.yield()
-        await Task.yield()
+        await settleDebounce()
 
         XCTAssertEqual(store.files.count, 5, "5 formats valides sur 6 doivent être acceptés")
     }
@@ -160,8 +162,7 @@ final class AppDelegateTests: XCTestCase {
         delegate.application(NSApplication.shared, open: [png2])
         delegate.application(NSApplication.shared, open: [png3])
 
-        await Task.yield()
-        await Task.yield()
+        await settleDebounce()
 
         XCTAssertEqual(store.files.count, 3, "3 fichiers ouverts séparément doivent tous être dans le même store")
     }
@@ -174,12 +175,12 @@ final class AppDelegateTests: XCTestCase {
         // Pas de store encore
         delegate.application(NSApplication.shared, open: [png1])
         delegate.application(NSApplication.shared, open: [png2])
-        await Task.yield()
+        await settleDebounce()
 
         // Store prêt
         delegate.store = store
         delegate.processPendingFiles()
-        await Task.yield()
+        await settleDebounce()
 
         XCTAssertEqual(store.files.count, 2, "Les fichiers reçus avant l'init du store doivent arriver après processPendingFiles")
     }
@@ -193,10 +194,9 @@ final class AppDelegateTests: XCTestCase {
 
         // Simule deux appels successifs avec le même fichier (comportement Finder pathologique)
         delegate.application(NSApplication.shared, open: [png])
-        await Task.yield()
+        await settleDebounce()
         delegate.application(NSApplication.shared, open: [png])
-        await Task.yield()
-        await Task.yield()
+        await settleDebounce()
 
         XCTAssertEqual(store.files.count, 1, "Un même fichier ne doit pas être ajouté deux fois")
     }

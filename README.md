@@ -54,6 +54,7 @@ ImageArm est une app macOS native qui **compresse vos images jusqu'a 80%** sans 
 | **AVIF** | ImageIO natif macOS 14+ | Apple Silicon hardware encoder |
 | **SVG** | svgo | — |
 | **WebP** | cwebp | — |
+| **ICNS** | iconutil + oxipng (intégré macOS) | — |
 
 ### Comment ca marche
 
@@ -144,7 +145,7 @@ imagearm ~/Desktop/assets/
 ```bash
 cd tools
 make check-deps     # Verifier les prerequis
-make tools          # Compiler les 7 outils
+make tools          # Compiler les 8 outils
 make sign-tools     # Signer (Developer ID + Hardened Runtime)
 make release        # Build Release complet
 make dmg            # Creer le DMG signe
@@ -196,6 +197,7 @@ ImageArm is a native macOS app that **compresses your images up to 80%** with no
 | **AVIF** | Native macOS 14+ ImageIO | Apple Silicon hardware encoder |
 | **SVG** | svgo | — |
 | **WebP** | cwebp | — |
+| **ICNS** | iconutil + oxipng (built-in macOS) | — |
 
 ### How it works
 
@@ -286,7 +288,7 @@ imagearm ~/Desktop/assets/
 ```bash
 cd tools
 make check-deps     # Check prerequisites
-make tools          # Build all 7 tools
+make tools          # Build all 8 tools
 make sign-tools     # Sign (Developer ID + Hardened Runtime)
 make release        # Full Release build
 make dmg            # Create signed DMG

@@ -131,11 +131,15 @@ final class ImageStoreTests: XCTestCase {
     // MARK: - supportedExtensions
 
     func testSupportedExtensions() {
-        let expected = Set(["png", "jpg", "jpeg", "heic", "heif", "svg", "webp"])
+        let expected = Set(["png", "jpg", "jpeg", "heic", "heif", "gif", "tiff", "tif", "avif", "svg", "webp", "icns"])
         XCTAssertEqual(ImageStore.supportedExtensions, expected)
     }
 
-    func testGIFNotSupported() {
-        XCTAssertFalse(ImageStore.supportedExtensions.contains("gif"))
+    func testAnimatedAndContainerFormatsSupported() {
+        // GIF (v1.2), TIFF/AVIF (v1.2), ICNS (v1.5) — ajoutés au fil des versions
+        XCTAssertTrue(ImageStore.supportedExtensions.contains("gif"))
+        XCTAssertTrue(ImageStore.supportedExtensions.contains("tiff"))
+        XCTAssertTrue(ImageStore.supportedExtensions.contains("avif"))
+        XCTAssertTrue(ImageStore.supportedExtensions.contains("icns"))
     }
 }

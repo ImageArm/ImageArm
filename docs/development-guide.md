@@ -17,7 +17,7 @@ Les outils CLI sont **embarqués dans le .app bundle** (compilés via `tools/Mak
 Pour le développement, compiler les outils :
 ```bash
 # Prérequis : Rust, Bun, CMake
-brew install rust oven-sh/bun/bun cmake
+brew install rust oven-sh/bun/bun cmake autoconf automake
 
 # Compiler et signer
 cd tools && make && make sign-tools && cd ..
@@ -29,7 +29,7 @@ cd tools && make && make sign-tools && cd ..
 | oxipng | PNG | Recompression lossless |
 | pngcrush | PNG | Sélection brute-force de filtres |
 | cjpeg/jpegtran | JPEG | Recompression progressive (mozjpeg) |
-| gifsicle | GIF | Optimisation GIF |
+| gifsicle | GIF | Optimisation GIF (autotools) |
 | svgo | SVG | Minification SVG |
 | cwebp | WebP | Recompression WebP |
 

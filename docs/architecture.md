@@ -40,7 +40,7 @@ ImageArm est une application macOS native (SwiftUI, macOS 14+) qui optimise des 
 │                  Services                            │
 │  ImageOptimizer (actor) ←── ToolManager (Sendable)  │
 │         │                                            │
-│         ├── Pipeline PNG:  GPU → pngquant → oxipng → pngcrush │
+│         ├── Pipeline PNG:  pngquant → oxipng               │
 │         ├── Pipeline JPEG: GPU HW → mozjpeg               │
 │         ├── Pipeline HEIF: GPU lossy → GPU max quality     │
 │         ├── Pipeline GIF:  gifsicle (lossy optionnel)      │
@@ -66,11 +66,11 @@ Pour chaque image, plusieurs outils s'exécutent séquentiellement. Chaque outil
 
 ### Pipeline par format
 
-#### PNG (2-4 étapes selon le niveau)
-1. **Metal GPU quantize** (high/ultra, lossy) — Compute shader Bayer+blue noise dithering
-2. **pngquant** (high/ultra, lossy) — Quantization lossy, compète avec le résultat GPU
-3. **oxipng** (toujours) — Recompression lossless, niveaux -o2 à -o6
-4. **pngcrush** (high/ultra) — Sélection brute-force de filtres PNG
+#### PNG (1-2 étapes selon le niveau)
+1. **pngquant** (niveaux lossy) — Quantization lossy
+2. **oxipng** (toujours) — Recompression lossless, niveaux -o2 à -o6
+
+> Le quantizer GPU Metal et **pngcrush** ont été retirés du pipeline PNG en v1.3.0 (crash use-after-free côté GPU, gain marginal côté pngcrush). Les shaders Metal restent utilisés pour JPEG/HEIF/AVIF.
 
 #### JPEG (1-2 étapes selon le niveau)
 1. **Metal GPU HW encoder** (high/ultra, lossy) — Apple Silicon hardware encoder via ImageIO
@@ -96,10 +96,19 @@ Pour chaque image, plusieurs outils s'exécutent séquentiellement. Chaque outil
 #### WebP (1 étape)
 1. **cwebp** — Recompression lossless ou lossy. ⚠️ Comportement inverse des autres outils : le défaut cwebp est `-metadata none` (strip). `-metadata all` est ajouté quand `preserveMetadata = true`.
 
+#### ICNS (2 étapes)
+1. **iconutil -c iconset** — Extrait le `.icns` en dossier `.iconset` (un PNG par résolution)
+2. **oxipng** — Optimise chaque PNG du `.iconset` in-place, puis **iconutil -c icns** recompile l'archive
+
+Outils natifs macOS (`/usr/bin/iconutil`), zéro dépendance Homebrew. Cas particuliers :
+- `.icns` legacy sans ressource PNG → ignoré (`alreadyOptimal`), aucune compression possible
+- oxipng absent → recompilation seule, sans gain
+- Un dossier `.iconset` orphelin d'un crash précédent est supprimé avant extraction (sinon `iconutil` échoue avec « file exists »)
+
 ### Gestion des fichiers temporaires
 
 - Pattern de nommage : `{original}.imagearm.{suffix}`
-- Suffixes : `.tmp`, `.gpu.png`, `.quant.png`, `.oxi.png`, `.crush.png`, `.moz.jpg`, etc.
+- Suffixes : `.tmp`, `.quant.png`, `.oxi.png`, `.moz.jpg`, `.iconset`, `.icns`, etc.
 - Remplacement atomique : backup original → move optimisé → trash backup
 - Nettoyage systématique via `cleanupTemps(around:)` en `defer`
 

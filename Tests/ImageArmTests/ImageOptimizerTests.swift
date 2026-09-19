@@ -113,8 +113,8 @@ final class ImageOptimizerTests: XCTestCase {
         await optimizer.optimize(file: file, level: .standard)
         let status = await MainActor.run { file.status }
         switch status {
-        case .failed:
-            XCTFail("WebP pipeline ne devrait pas échouer sur un fichier valide")
+        case .failed(let reason):
+            XCTFail("WebP pipeline ne devrait pas échouer sur un fichier valide — \(reason)")
         default:
             break
         }

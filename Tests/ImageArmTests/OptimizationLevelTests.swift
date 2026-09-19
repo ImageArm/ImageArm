@@ -108,11 +108,17 @@ final class OptimizationLevelTests: XCTestCase {
 
     // MARK: - Loss indicator
 
+    // `lossIndicator` passe par String(localized:) — on teste la structure,
+    // pas le texte, sinon le test casse dès que la locale du runner change.
     func testLossIndicator() {
-        XCTAssertTrue(OptimizationLevel.quick.lossIndicator.contains("perte"))
-        XCTAssertTrue(OptimizationLevel.standard.lossIndicator.contains("perte"))
-        XCTAssertTrue(OptimizationLevel.high.lossIndicator.contains("max"))
-        XCTAssertTrue(OptimizationLevel.ultra.lossIndicator.contains("extrême"))
+        for level in OptimizationLevel.allCases {
+            XCTAssertFalse(level.lossIndicator.isEmpty, "\(level) doit avoir un indicateur")
+        }
+        // quick et standard sont tous deux sans perte → même libellé
+        XCTAssertEqual(OptimizationLevel.quick.lossIndicator, OptimizationLevel.standard.lossIndicator)
+        // high et ultra sont avec perte, et se distinguent l'un de l'autre
+        XCTAssertNotEqual(OptimizationLevel.high.lossIndicator, OptimizationLevel.quick.lossIndicator)
+        XCTAssertNotEqual(OptimizationLevel.ultra.lossIndicator, OptimizationLevel.high.lossIndicator)
     }
 
     // MARK: - Total steps

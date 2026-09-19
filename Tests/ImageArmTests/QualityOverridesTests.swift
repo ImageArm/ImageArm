@@ -26,13 +26,13 @@ final class QualityOverridesTests: XCTestCase {
     // MARK: - Custom overrides
 
     func testCustomJPEGOverride() {
-        let overrides = QualityOverrides(useCustom: true, jpegLossy: true, jpegQuality: 50, pngLossy: false, pngQuality: 80)
+        let overrides = QualityOverrides(useCustom: true, jpegLossy: true, jpegQuality: 50, pngLossy: false, pngQuality: 80, preserveTimestamps: true, preserveMetadata: true)
         XCTAssertTrue(overrides.effectiveJPEGLossy(level: .quick)) // override ignores level
         XCTAssertEqual(overrides.effectiveJPEGQuality(level: .quick), 50)
     }
 
     func testCustomPNGOverride() {
-        let overrides = QualityOverrides(useCustom: true, jpegLossy: false, jpegQuality: 85, pngLossy: true, pngQuality: 60)
+        let overrides = QualityOverrides(useCustom: true, jpegLossy: false, jpegQuality: 85, pngLossy: true, pngQuality: 60, preserveTimestamps: true, preserveMetadata: true)
         XCTAssertTrue(overrides.effectivePNGLossy(level: .quick)) // override ignores level
         let range = overrides.effectivePNGQualityRange(level: .quick)
         XCTAssertEqual(range.max, 60)
@@ -40,7 +40,7 @@ final class QualityOverridesTests: XCTestCase {
     }
 
     func testCustomPNGQualityRangeMinClamped() {
-        let overrides = QualityOverrides(useCustom: true, jpegLossy: false, jpegQuality: 85, pngLossy: true, pngQuality: 10)
+        let overrides = QualityOverrides(useCustom: true, jpegLossy: false, jpegQuality: 85, pngLossy: true, pngQuality: 10, preserveTimestamps: true, preserveMetadata: true)
         let range = overrides.effectivePNGQualityRange(level: .quick)
         XCTAssertEqual(range.min, 0) // max(0, 10 - 20) = 0
     }
@@ -50,5 +50,28 @@ final class QualityOverridesTests: XCTestCase {
         let range = overrides.effectivePNGQualityRange(level: .high)
         XCTAssertEqual(range.min, OptimizationLevel.high.pngQuantQualityRange.min)
         XCTAssertEqual(range.max, OptimizationLevel.high.pngQuantQualityRange.max)
+    }
+
+    // MARK: - Métadonnées (preserveMetadata)
+
+    func testPreserveMetadataNeverStripsWhateverTheLevel() {
+        let overrides = QualityOverrides(useCustom: false, jpegLossy: false, jpegQuality: 85, pngLossy: false, pngQuality: 80, preserveTimestamps: true, preserveMetadata: true)
+        for level in OptimizationLevel.allCases {
+            XCTAssertFalse(overrides.effectiveStripMetadata(level: level), "\(level) ne doit pas stripper quand preserveMetadata = true")
+        }
+    }
+
+    func testNoPreserveMetadataFollowsLevel() {
+        let overrides = QualityOverrides(useCustom: false, jpegLossy: false, jpegQuality: 85, pngLossy: false, pngQuality: 80, preserveTimestamps: true, preserveMetadata: false)
+        XCTAssertFalse(overrides.effectiveStripMetadata(level: .quick)) // quick ne strippe jamais
+        XCTAssertTrue(overrides.effectiveStripMetadata(level: .standard))
+        XCTAssertTrue(overrides.effectiveStripMetadata(level: .high))
+        XCTAssertTrue(overrides.effectiveStripMetadata(level: .ultra))
+    }
+
+    func testNoneDefaultsToPreservingMetadata() {
+        XCTAssertTrue(QualityOverrides.none.preserveMetadata)
+        XCTAssertTrue(QualityOverrides.none.preserveTimestamps)
+        XCTAssertFalse(QualityOverrides.none.effectiveStripMetadata(level: .ultra))
     }
 }

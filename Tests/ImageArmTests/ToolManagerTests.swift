@@ -33,7 +33,7 @@ final class ToolManagerTests: XCTestCase {
 
     func testAllToolsCount() {
         let tools = toolManager.allTools()
-        XCTAssertEqual(tools.count, 7) // pngquant, oxipng, pngcrush, cjpeg, jpegtran, svgo, cwebp
+        XCTAssertEqual(tools.count, 9) // pngquant, oxipng, cjpeg, jpegtran, svgo, cwebp, gifsicle, tiffutil, iconutil
     }
 
     func testAllToolsHaveNames() {
@@ -62,12 +62,11 @@ final class ToolManagerTests: XCTestCase {
         let names = toolManager.allTools().map(\.name)
         XCTAssertFalse(names.contains("advpng"))
         XCTAssertFalse(names.contains("jpegoptim"))
-        XCTAssertFalse(names.contains("gifsicle"))
+        XCTAssertFalse(names.contains("pngcrush")) // retiré du pipeline PNG en v1.3.0
     }
 
     func testDroppedToolsNotFound() {
         XCTAssertNil(toolManager.find("advpng"))
         XCTAssertNil(toolManager.find("jpegoptim"))
-        XCTAssertNil(toolManager.find("gifsicle"))
     }
 }

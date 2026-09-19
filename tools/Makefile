@@ -1,9 +1,9 @@
 # ImageArm — Build system outils CLI embarqués
-# Compile les 6 outils CLI en arm64 pour macOS 14+
+# Compile les outils CLI embarqués en arm64 pour macOS 14+
 #
 # Usage :
 #   make check-deps   Vérifie les prérequis
-#   make tools        Compile les 6 outils
+#   make tools        Compile les outils CLI embarqués
 #   make sign-tools   Signe les binaires (Developer ID + Hardened Runtime)
 #   make verify-tools Vérifie les signatures (codesign + spctl)
 #   make clean        Supprime les binaires compilés
@@ -22,7 +22,7 @@ export MACOSX_DEPLOYMENT_TARGET
 # Identité Developer ID (lue depuis l'env ou détectée via le keychain)
 DEVELOPER_ID ?= $(shell security find-identity -v -p codesigning 2>/dev/null | grep "Developer ID Application" | head -1 | grep -oE '"[^"]+"' | tr -d '"' || echo "")
 
-TOOLS := $(BIN)/pngquant $(BIN)/oxipng $(BIN)/pngcrush $(BIN)/cjpeg $(BIN)/jpegtran $(BIN)/svgo $(BIN)/cwebp
+TOOLS := $(BIN)/pngquant $(BIN)/oxipng $(BIN)/pngcrush $(BIN)/cjpeg $(BIN)/jpegtran $(BIN)/svgo $(BIN)/cwebp $(BIN)/gifsicle
 
 # Apple ID pour notarisation (lire depuis env)
 APPLE_ID ?=
@@ -80,6 +80,9 @@ $(BIN)/svgo:
 
 $(BIN)/cwebp:
 	@bash "$(SCRIPTS)/build-cwebp.sh"
+
+$(BIN)/gifsicle:
+	@bash "$(SCRIPTS)/build-gifsicle.sh"
 
 # ── Signature code ─────────────────────────────────────────────────────────────
 

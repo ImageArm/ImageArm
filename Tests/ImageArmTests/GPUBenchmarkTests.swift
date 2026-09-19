@@ -30,8 +30,6 @@ final class GPUBenchmarkTests: XCTestCase {
             // Variable d'env PROJECT_DIR (set par Xcode)
             ProcessInfo.processInfo.environment["PROJECT_DIR"]
                 .map { URL(fileURLWithPath: $0).appendingPathComponent("Tests/fixtures/benchmark") },
-            // Chemin absolu en fallback
-            URL(fileURLWithPath: "/Users/julien/mobile/armimage/Tests/fixtures/benchmark"),
         ].compactMap { $0 }
 
         corpusDir = candidates.first { FileManager.default.fileExists(atPath: $0.path) }
@@ -48,7 +46,8 @@ final class GPUBenchmarkTests: XCTestCase {
             .filter { $0.pathExtension == "png" && $0.lastPathComponent.hasPrefix("bench-png-") }
             .sorted { $0.lastPathComponent < $1.lastPathComponent }
 
-        XCTAssertGreaterThan(pngFiles.count, 0, "Aucun PNG dans le corpus")
+        // Les images de benchmark sont gitignorées (cf. Tests/fixtures/benchmark/.gitignore)
+        try XCTSkipIf(pngFiles.isEmpty, "Corpus vide : générer les images avec tools/scripts/tool-comparison.sh")
 
         // Charger les résultats CLI si disponibles
         let cliResults = loadCLIResults()
@@ -176,7 +175,7 @@ final class GPUBenchmarkTests: XCTestCase {
             .filter { $0.pathExtension == "jpg" && $0.lastPathComponent.hasPrefix("bench-jpeg-") }
             .sorted { $0.lastPathComponent < $1.lastPathComponent }
 
-        XCTAssertGreaterThan(jpegFiles.count, 0, "Aucun JPEG dans le corpus")
+        try XCTSkipIf(jpegFiles.isEmpty, "Corpus vide : générer les images avec tools/scripts/tool-comparison.sh")
 
         let tmpDir = FileManager.default.temporaryDirectory.appendingPathComponent("gpu-jpeg-bench-\(UUID().uuidString)")
         try FileManager.default.createDirectory(at: tmpDir, withIntermediateDirectories: true)

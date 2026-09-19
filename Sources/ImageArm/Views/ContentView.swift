@@ -48,8 +48,19 @@ struct ContentView: View {
                 StatusBarView()
             }
         }
-        .toolbar {
-            ToolbarItemGroup(placement: .automatic) {
+        // Barre d'outils personnalisable : l'identifiant active la feuille
+        // « Personnaliser la barre d'outils… » et l'autosauvegarde AppKit.
+        //
+        // ⚠️ Deux règles à ne jamais casser ici :
+        //  1. AUCUN item conditionnel (`if`, `ForEach` sur une collection
+        //     mutable). Une appartenance qui apparaît/disparaît casse
+        //     l'identité de personnalisation et fait planter SwiftUI
+        //     (FB15513599, non corrigé). Utiliser `.disabled()` à la place.
+        //  2. Chaque item expose un `Label` titre + icône, sinon il s'affiche
+        //     vide dans la palette et dans les modes « Icône seule » /
+        //     « Texte seul ».
+        .toolbar(id: ToolbarItemID.toolbarID) {
+            ToolbarItem(id: ToolbarItemID.level.rawValue, placement: .automatic) {
                 // Un Picker `.menu` en toolbar n'affiche que l'icône du Label :
                 // le niveau sélectionné devenait invisible. Un Menu explicite
                 // permet de montrer le nom, et l'indicateur de perte descend
@@ -75,20 +86,27 @@ struct ContentView: View {
                 .menuStyle(.borderlessButton)
                 .fixedSize()
                 .help("Niveau d'optimisation — \(store.level.lossIndicator)")
+            }
 
+            ToolbarItem(id: ToolbarItemID.console.rawValue, placement: .automatic) {
                 Toggle(isOn: $logStore.isVisible) {
                     Label("Console", systemImage: "terminal")
                 }
                 .help("Afficher/masquer la console")
             }
 
-            ToolbarItem(placement: .primaryAction) {
+            ToolbarItem(id: ToolbarItemID.donate.rawValue, placement: .primaryAction) {
                 Button {
                     if let url = URL(string: "https://ko-fi.com/imagearm") {
                         NSWorkspace.shared.open(url)
                     }
                 } label: {
-                    HStack(spacing: 4) {
+                    // Label(title:icon:) et non un HStack : la palette de
+                    // personnalisation a besoin d'un titre et d'une icône
+                    // distincts. Le dégradé reste porté par l'icône.
+                    Label {
+                        Text(store.donationDone ? "Merci ♥" : "Soutenir")
+                    } icon: {
                         Image(systemName: "heart.fill")
                             .foregroundStyle(
                                 LinearGradient(
@@ -101,47 +119,78 @@ struct ContentView: View {
                                     endPoint: .bottomTrailing
                                 )
                             )
-                        Text(store.donationDone ? "Merci ♥" : "Soutenir")
                     }
+                    .labelStyle(.titleAndIcon)
                 }
                 .buttonStyle(.bordered)
                 .help("Soutenir ImageArm sur Ko-fi")
             }
 
-            ToolbarItemGroup(placement: .primaryAction) {
+            ToolbarItem(id: ToolbarItemID.add.rawValue, placement: .primaryAction) {
                 Button {
                     store.showFilePicker = true
                 } label: {
                     Label("Ajouter", systemImage: "plus")
                 }
                 .help("Ajouter des images à optimiser")
+            }
+            .customizationBehavior(.reorderable)
 
+            // Optimiser et Stop fusionnés en un seul item toujours présent :
+            // les deux états sont mutuellement exclusifs, et un item construit
+            // conditionnellement est interdit dans une barre personnalisable.
+            ToolbarItem(id: ToolbarItemID.run.rawValue, placement: .primaryAction) {
                 Button {
-                    store.optimizeAll()
+                    if store.isProcessing {
+                        store.stopAll()
+                    } else {
+                        store.optimizeAll()
+                    }
                 } label: {
-                    Label("Optimiser", systemImage: "bolt.fill")
+                    Label(store.isProcessing ? "Stop" : "Optimiser",
+                          systemImage: store.isProcessing ? "stop.fill" : "bolt.fill")
                 }
                 .buttonStyle(.borderedProminent)
-                .disabled(store.isProcessing || store.files.isEmpty)
-                .keyboardShortcut(.return, modifiers: .command)
-                .help("Lancer l'optimisation (⌘↩)")
+                .disabled(!store.canStop && !store.canOptimize)
+                // ⌘↩ vit désormais dans le menu Optimisation : un raccourci
+                // porté par un bouton de barre d'outils meurt avec elle.
+                .help(store.isProcessing
+                      ? "Arrêter l'optimisation en cours"
+                      : "Lancer l'optimisation (⌘↩)")
+            }
+            .customizationBehavior(.reorderable)
 
-                if store.isProcessing {
-                    Button {
-                        store.stopAll()
-                    } label: {
-                        Label("Stop", systemImage: "stop.fill")
-                    }
-                    .help("Arrêter l'optimisation en cours")
-                }
-
+            ToolbarItem(id: ToolbarItemID.clear.rawValue, placement: .primaryAction) {
                 Button {
                     store.clearAll()
                 } label: {
                     Label("Vider", systemImage: "trash")
                 }
-                .disabled(store.files.isEmpty)
+                .disabled(!store.canClear)
                 .help("Vider la liste des images")
+            }
+
+            // Masqués par défaut : disponibles dans « Personnaliser la barre
+            // d'outils… » pour ceux qui en ont besoin, zéro coût visuel sinon.
+            ToolbarItem(id: ToolbarItemID.clearCompleted.rawValue,
+                        placement: .primaryAction,
+                        showsByDefault: false) {
+                Button {
+                    store.clearCompleted()
+                } label: {
+                    Label("Vider les terminés", systemImage: "checkmark.circle")
+                }
+                .disabled(!store.canClearCompleted)
+                .help("Retirer de la liste les images déjà optimisées")
+            }
+
+            ToolbarItem(id: ToolbarItemID.settings.rawValue,
+                        placement: .primaryAction,
+                        showsByDefault: false) {
+                SettingsLink {
+                    Label("Réglages…", systemImage: "gearshape")
+                }
+                .help("Ouvrir les réglages d'ImageArm")
             }
         }
         .onDrop(of: [.fileURL], isTargeted: $isDragOver) { providers in

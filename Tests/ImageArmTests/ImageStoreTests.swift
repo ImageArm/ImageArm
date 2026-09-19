@@ -142,4 +142,43 @@ final class ImageStoreTests: XCTestCase {
         XCTAssertTrue(ImageStore.supportedExtensions.contains("avif"))
         XCTAssertTrue(ImageStore.supportedExtensions.contains("icns"))
     }
+
+    // MARK: - Conditions d'activation (barre d'outils + barre des menus)
+
+    func testCanOptimizeRequiresFiles() throws {
+        XCTAssertFalse(store.canOptimize, "Liste vide : rien à optimiser")
+
+        let png = tempDir.appendingPathComponent("test.png")
+        try "fake".write(to: png, atomically: true, encoding: .utf8)
+        store.addFiles(urls: [png])
+        XCTAssertTrue(store.canOptimize)
+
+        store.isProcessing = true
+        XCTAssertFalse(store.canOptimize, "Traitement en cours : pas de relance")
+    }
+
+    func testCanStopMirrorsIsProcessing() {
+        XCTAssertFalse(store.canStop)
+        store.isProcessing = true
+        XCTAssertTrue(store.canStop)
+    }
+
+    func testCanClearRequiresFiles() throws {
+        XCTAssertFalse(store.canClear)
+
+        let png = tempDir.appendingPathComponent("test.png")
+        try "fake".write(to: png, atomically: true, encoding: .utf8)
+        store.addFiles(urls: [png])
+        XCTAssertTrue(store.canClear)
+    }
+
+    func testCanClearCompletedRequiresCompleted() throws {
+        let png = tempDir.appendingPathComponent("test.png")
+        try "fake".write(to: png, atomically: true, encoding: .utf8)
+        store.addFiles(urls: [png])
+        XCTAssertFalse(store.canClearCompleted, "Aucun fichier terminé")
+
+        store.files[0].status = .done(savedBytes: 10)
+        XCTAssertTrue(store.canClearCompleted)
+    }
 }

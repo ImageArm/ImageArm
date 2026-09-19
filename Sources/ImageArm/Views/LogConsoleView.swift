@@ -50,6 +50,18 @@ struct LogConsoleView: View {
                 }
                 .buttonStyle(.plain)
                 .foregroundStyle(.secondary)
+
+                // Seule sortie quand la barre d'outils est masquée ou que
+                // l'item Console en a été retiré.
+                Button {
+                    logStore.isVisible = false
+                } label: {
+                    Image(systemName: "xmark")
+                        .font(.caption2)
+                }
+                .buttonStyle(.plain)
+                .foregroundStyle(.secondary)
+                .help("Fermer la console")
             }
             .padding(.horizontal, 12)
             .padding(.vertical, 6)

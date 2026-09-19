@@ -303,6 +303,34 @@
         }
       }
     },
+    "Afficher la console": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Konsole einblenden"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Show console"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mostra console"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Console tonen"
+          }
+        }
+      }
+    },
     "Afficher/masquer la console": {
       "extractionState": "stale",
       "localizations": {
@@ -415,6 +443,34 @@
           "stringUnit": {
             "state": "translated",
             "value": "Afbeeldingen toevoegen…"
+          }
+        }
+      }
+    },
+    "Arrêter l'optimisation": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Optimierung stoppen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stop optimization"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ferma l'ottimizzazione"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Optimalisatie stoppen"
           }
         }
       }
@@ -909,6 +965,62 @@
         }
       }
     },
+    "Fermer la console": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Konsole schließen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Close console"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chiudi console"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Console sluiten"
+          }
+        }
+      }
+    },
+    "Fichiers": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dateien"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Files"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "File"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bestanden"
+          }
+        }
+      }
+    },
     "Format non supporté": {
       "extractionState": "stale",
       "localizations": {
@@ -995,30 +1107,30 @@
         }
       }
     },
-    "Glissez vos images ou cliquez + pour commencer.\nImageArm optimise PNG, JPEG, HEIF, GIF, TIFF, AVIF, SVG et WebP.": {
+    "Glissez vos images ou appuyez sur ⌘O pour commencer.\nImageArm optimise PNG, JPEG, HEIF, GIF, TIFF, AVIF, SVG et WebP.": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Bilder hier ablegen oder + klicken.\nImageArm optimiert PNG, JPEG, HEIF, GIF, TIFF, AVIF, SVG und WebP."
+            "value": "Ziehen Sie Ihre Bilder hierher oder drücken Sie ⌘O, um zu beginnen.\nImageArm optimiert PNG, JPEG, HEIF, GIF, TIFF, AVIF, SVG und WebP."
           }
         },
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Drop your images or click + to start.\nImageArm optimizes PNG, JPEG, HEIF, GIF, TIFF, AVIF, SVG and WebP."
+            "value": "Drag your images or press ⌘O to get started.\nImageArm optimizes PNG, JPEG, HEIF, GIF, TIFF, AVIF, SVG and WebP."
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Trascina le immagini o clicca + per iniziare.\nImageArm ottimizza PNG, JPEG, HEIF, GIF, TIFF, AVIF, SVG e WebP."
+            "value": "Trascina le tue immagini oppure premi ⌘O per iniziare.\nImageArm ottimizza PNG, JPEG, HEIF, GIF, TIFF, AVIF, SVG e WebP."
           }
         },
         "nl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Sleep afbeeldingen of klik + om te starten.\nImageArm optimaliseert PNG, JPEG, HEIF, GIF, TIFF, AVIF, SVG en WebP."
+            "value": "Sleep je afbeeldingen of druk op ⌘O om te beginnen.\nImageArm optimaliseert PNG, JPEG, HEIF, GIF, TIFF, AVIF, SVG en WebP."
           }
         }
       }
@@ -1193,6 +1305,34 @@
           "stringUnit": {
             "state": "translated",
             "value": "CLI-tools zijn meegeleverd in de applicatie."
+          }
+        }
+      }
+    },
+    "Masquer la console": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Konsole ausblenden"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hide console"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nascondi console"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Console verbergen"
           }
         }
       }
@@ -1572,6 +1712,34 @@
         }
       }
     },
+    "Optimiser tout": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Alle optimieren"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Optimize all"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ottimizza tutto"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Alles optimaliseren"
+          }
+        }
+      }
+    },
     "Optimisé": {
       "extractionState": "stale",
       "localizations": {
@@ -1714,6 +1882,34 @@
           "stringUnit": {
             "state": "translated",
             "value": "Openen: %lld bestand(en)"
+          }
+        }
+      }
+    },
+    "Ouvrir les réglages d'ImageArm": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ImageArm-Einstellungen öffnen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open ImageArm settings"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apri le impostazioni di ImageArm"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ImageArm-instellingen openen"
           }
         }
       }
@@ -1863,6 +2059,62 @@
         }
       }
     },
+    "Préserver les dates originales des fichiers": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Originale Dateidaten beibehalten"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Preserve original file dates"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Conserva le date originali dei file"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Originele bestandsdatums behouden"
+          }
+        }
+      }
+    },
+    "Préserver les métadonnées (EXIF, profil couleur)": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Metadaten beibehalten (EXIF, Farbprofil)"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Preserve metadata (EXIF, color profile)"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Conserva i metadati (EXIF, profilo colore)"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Metadata behouden (EXIF, kleurprofiel)"
+          }
+        }
+      }
+    },
     "Qualité JPEG": {
       "localizations": {
         "de": {
@@ -1977,6 +2229,34 @@
         }
       }
     },
+    "Retirer de la liste les images déjà optimisées": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bereits optimierte Bilder aus der Liste entfernen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Remove already-optimized images from the list"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rimuovi dalla lista le immagini già ottimizzate"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Al geoptimaliseerde afbeeldingen uit de lijst verwijderen"
+          }
+        }
+      }
+    },
     "Ré-optimiser": {
       "extractionState": "stale",
       "localizations": {
@@ -2002,6 +2282,34 @@
           "stringUnit": {
             "state": "translated",
             "value": "Opnieuw optimaliseren"
+          }
+        }
+      }
+    },
+    "Réglages…": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Einstellungen…"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Settings…"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Impostazioni…"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Instellingen…"
           }
         }
       }
@@ -2060,6 +2368,34 @@
           "stringUnit": {
             "state": "translated",
             "value": "ImageArm steunen via Ko-fi"
+          }
+        }
+      }
+    },
+    "Soutenir ImageArm ♥": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ImageArm unterstützen ♥"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Support ImageArm ♥"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sostieni ImageArm ♥"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ImageArm steunen ♥"
           }
         }
       }
@@ -2336,6 +2672,34 @@
         }
       }
     },
+    "Vider la liste": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Liste leeren"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Clear list"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Svuota la lista"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lijst wissen"
+          }
+        }
+      }
+    },
     "Vider la liste des images": {
       "extractionState": "stale",
       "localizations": {
@@ -2361,6 +2725,34 @@
           "stringUnit": {
             "state": "translated",
             "value": "Afbeeldingenlijst wissen"
+          }
+        }
+      }
+    },
+    "Vider les terminés": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Erledigte entfernen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Clear completed"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rimuovi completati"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Voltooide wissen"
           }
         }
       }
@@ -2480,30 +2872,30 @@
         }
       }
     },
-    "ou cliquez + pour ajouter des fichiers": {
+    "ou appuyez sur ⌘O pour ajouter des fichiers": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "oder klicken Sie auf + um Dateien hinzuzufügen"
+            "value": "oder ⌘O drücken, um Dateien hinzuzufügen"
           }
         },
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "or click + to add files"
+            "value": "or press ⌘O to add files"
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "o clicca + per aggiungere file"
+            "value": "oppure premi ⌘O per aggiungere file"
           }
         },
         "nl": {
           "stringUnit": {
             "state": "translated",
-            "value": "of klik op + om bestanden toe te voegen"
+            "value": "of druk op ⌘O om bestanden toe te voegen"
           }
         }
       }

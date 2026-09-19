@@ -13,7 +13,7 @@ struct DropZoneView: View {
                 .font(.title2)
                 .foregroundStyle(.secondary)
 
-            Text("ou cliquez + pour ajouter des fichiers")
+            Text("ou appuyez sur ⌘O pour ajouter des fichiers")
                 .font(.subheadline)
                 .foregroundStyle(.tertiary)
 

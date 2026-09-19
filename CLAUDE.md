@@ -21,7 +21,13 @@ xcodebuild -project ImageArm.xcodeproj -scheme ImageArm -configuration Release b
 
 To regenerate the `.xcodeproj` after modifying `project.yml`: `xcodegen generate` (requires `brew install xcodegen`).
 
-No tests exist in the project.
+Test suite: **XCTest**, 121 tests in `Tests/ImageArmTests/`.
+
+```bash
+xcodebuild -project ImageArm.xcodeproj -scheme ImageArm -destination 'platform=macOS' test
+```
+
+2 `GPUBenchmarkTests` are skipped while `Tests/fixtures/benchmark/` is empty.
 
 ## Architecture
 
@@ -81,6 +87,19 @@ Ce script récupère automatiquement le sha256 du DMG depuis les assets GitHub e
 - The app modifies files **in-place** (with backup/trash safety)
 - `optiLog()` is the global logging function used throughout services
 - Entitlements: no sandbox, file access, GPU access (`ImageArm.entitlements`)
+- **Toolbar item ids are a persistence contract.** The main window toolbar is a
+  customizable `.toolbar(id:)` (`Views/ContentView.swift`) whose ids live in
+  `Utils/ToolbarItemID.swift`. AppKit autosaves each user's layout under those
+  exact strings (`NSToolbar Configuration mainToolbar` in `UserDefaults`), so
+  renaming one silently resets every user's toolbar. Add ids, never rename them;
+  `ToolbarItemIDTests` pins them.
+- **Never add a conditional toolbar item** (`if`, `ForEach` over a mutable
+  collection) inside `.toolbar(id:)` — membership that appears/disappears breaks
+  customization identity and crashes SwiftUI (FB15513599, still open). Use
+  `.disabled()` instead.
+- Every toolbar action must also exist in the menu bar
+  (`Commands/OptimizationCommands.swift`): the toolbar can be hidden (⌥⌘T) or
+  emptied, and a `keyboardShortcut` carried by a toolbar button dies with it.
 
 
 ## Skills disponibles

@@ -7,6 +7,28 @@ updated: 2026-09-19
 
 # Bugs connus et résolus
 
+## toolbar-items-conditionnels
+
+**Symptôme** : avec une barre d'outils personnalisable (`.toolbar(id:)`), un `ToolbarItem(id:)` construit conditionnellement corrompt la disposition enregistrée et peut faire planter l'app (le déclencheur documenté : basculer l'item puis ouvrir une nouvelle fenêtre).
+
+**Cause** : une appartenance qui apparaît/disparaît casse l'identité de personnalisation côté SwiftUI/AppKit. Bug Apple **FB15513599**, reconnu par un ingénieur DTS en mars 2026, toujours ouvert de macOS 15 à 26.3 — voir https://developer.apple.com/forums/thread/772096
+
+**Règle** : **aucun `if` ni `ForEach` sur une collection mutable** dans le bloc `.toolbar(id:)` de `Views/ContentView.swift`. Utiliser `.disabled()` pour désactiver, jamais pour retirer.
+
+**Historique** : le bouton Stop était `if store.isProcessing { … }` avant la v1.6. Il a été fusionné avec Optimiser en un seul item `run` toujours présent, dont le libellé/l'icône basculent sur `store.isProcessing`.
+
+**Atténuation supplémentaire** : ImageArm remplace `CommandGroup(replacing: .newItem)` et déclare `LSMultipleInstancesProhibited`, donc il n'existe aucune commande « Nouvelle fenêtre » — le chemin de crash exact n'est pas atteignable. La règle reste appliquée par précaution.
+
+## toolbar-visibilite-non-persistee
+
+**Symptôme** (à confirmer sur écran local) : « Masquer la barre d'outils » (⌥⌘T) fonctionne pendant la session, mais la barre réapparaît au relancement.
+
+**Observation** : AppKit écrit bien `NSToolbar Configuration mainToolbar` dans les préférences (`TB Display Mode`, `TB Icon Size Mode`, `TB Is Shown`, `TB Size Mode`) — le nom d'autosauvegarde est l'identifiant passé à `.toolbar(id:)`. Mais une valeur `TB Is Shown = 0` écrite à la main est **réécrite à 1 au lancement suivant**, ce qui suggère que SwiftUI force la visibilité à la création de la fenêtre.
+
+**Non tranché** : la vérification a été faite dans une session distante où la fenêtre était hors écran actif (`kCGWindowIsOnscreen = false`, 0 fenêtre vue par l'API d'accessibilité), donc les commandes de menu liées à la fenêtre clé ne s'appliquaient pas. À revérifier sur un écran local : masquer avec ⌥⌘T, quitter, relancer.
+
+**Correctif si confirmé** : restauration **impérative** et ponctuelle dans `AppDelegate` (lire un booléen de `UserDefaults` dans `applicationDidFinishLaunching`, le poser sur `NSApp.windows.first?.toolbar?.isVisible`, le persister sur `NSWindow.willCloseNotification`), avec `guard !isHeadless`. **Ne pas** utiliser `@AppStorage` + `.toolbar(.hidden, for: .windowToolbar)` : ce modificateur est déclaratif, donc il serait réappliqué à chaque évaluation du corps de `ContentView` (très fréquente pendant un lot, `store.files` publie en continu) et écraserait le basculement natif de l'utilisateur en pleine optimisation.
+
 ## multi-fenetres
 
 **Symptôme** : sélectionner N fichiers dans le Finder (clic droit > Ouvrir avec > ImageArm, app fermée) ouvre N fenêtres au lieu d'une seule.

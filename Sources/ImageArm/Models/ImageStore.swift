@@ -86,6 +86,17 @@ final class ImageStore: ObservableObject {
         files.first(where: { $0.status.currentTool != nil })?.id
     }
 
+    // MARK: - Conditions d'activation (barre d'outils + barre des menus)
+
+    // Chaque action existe désormais à deux endroits : dans la barre d'outils
+    // (qui peut être masquée ou vidée) et dans la barre des menus. Ces
+    // prédicats évitent de dupliquer les conditions entre les deux.
+
+    var canOptimize: Bool { !isProcessing && !files.isEmpty }
+    var canStop: Bool { isProcessing }
+    var canClear: Bool { !files.isEmpty }
+    var canClearCompleted: Bool { completedCount > 0 }
+
     static let supportedTypes: [UTType] = ([.png, .jpeg, .heic, .gif, .tiff, .svg, .webP, .icns] as [UTType])
         + [UTType(filenameExtension: "avif")].compactMap { $0 }
     static let supportedExtensions = Set(["png", "jpg", "jpeg", "heic", "heif", "gif", "tiff", "tif", "avif", "svg", "webp", "icns"])

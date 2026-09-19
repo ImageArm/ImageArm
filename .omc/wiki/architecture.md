@@ -16,6 +16,47 @@ App macOS SwiftUI (macOS 14+) qui optimise des images en batch via un pipeline d
 | Models | `ImageFile`, `ImageStore`, `OptimizationLevel` | État observable, store central `@MainActor` |
 | Services | `ImageOptimizer`, `ToolManager`, `GPUProcessor` | Pipeline d'optimisation, outils CLI, GPU Metal |
 | Views | `ContentView`, `FileListView`, `DropZoneView` | UI drag-and-drop, liste fichiers, barre de statut |
+| Commands | `OptimizationCommands` | Miroir des actions de la barre d'outils dans la barre des menus |
+| Utils | `DesignTokens`, `FileSizeFormatter`, `ToolbarItemID` | Tokens de design, formatage, identifiants de barre d'outils |
+
+## Barre d'outils personnalisable
+
+La barre d'outils de la fenêtre principale (`Views/ContentView.swift`) utilise le mécanisme natif macOS : `.toolbar(id:)` côté vue et `ToolbarCommands()` côté `commands`. L'utilisateur obtient donc gratuitement, dans le menu **Présentation** :
+
+- « Masquer / Afficher la barre d'outils » (⌥⌘T)
+- « Personnaliser la barre d'outils… » — feuille système, glisser-déposer, modes Icône / Texte / Icône et texte
+
+Aucune préférence maison : **AppKit persiste tout** sous la clé `NSToolbar Configuration mainToolbar` (`TB Item Identifiers`, `TB Display Mode`, `TB Is Shown`, `TB Size Mode`). Le nom d'autosauvegarde **est** l'identifiant passé à `.toolbar(id:)`.
+
+### Les huit items
+
+| id | Rôle | Par défaut | Personnalisation |
+|---|---|---|---|
+| `level` | Menu du niveau d'optimisation | visible | retirable |
+| `console` | Bascule de la console de logs | visible | retirable |
+| `donate` | Soutien Ko-fi | visible | retirable |
+| `add` | Ajouter des images | visible | **non retirable** (`.reorderable`) |
+| `run` | Optimiser / Stop (fusionnés) | visible | **non retirable** (`.reorderable`) |
+| `clear` | Vider la liste | visible | retirable |
+| `clearCompleted` | Vider les terminés | masqué | retirable |
+| `settings` | Réglages… (`SettingsLink`) | masqué | retirable |
+
+### Deux invariants à ne jamais casser
+
+1. **Les identifiants sont un contrat de persistance** (`Utils/ToolbarItemID.swift`) : les renommer réinitialise silencieusement la barre de tous les utilisateurs. `ToolbarItemIDTests` les épingle.
+2. **Aucun item conditionnel** dans le bloc `.toolbar(id:)` — voir `toolbar-items-conditionnels` dans [bugs-connus](bugs-connus.md).
+
+### Pourquoi le miroir menu est obligatoire
+
+La barre peut être masquée ou vidée. Or `⌘↩` était porté par le bouton Optimiser de la barre, et un `keyboardShortcut` ne vit que tant que sa vue est rendue : masquer la barre tuait le raccourci. Stop et la bascule Console n'existaient nulle part ailleurs. `Commands/OptimizationCommands.swift` reflète donc chaque action :
+
+| Menu | Entrées |
+|---|---|
+| Optimisation | Optimiser tout (⌘↩), Arrêter l'optimisation (⌘.), Niveau d'optimisation, Vider la liste (⇧⌘⌫), Vider les terminés |
+| Présentation | Afficher / Masquer la console (⇧⌘L), après les entrées de `ToolbarCommands()` |
+| ImageArm | Soutenir ImageArm ♥, après « À propos » |
+
+`LogConsoleView` a également un bouton de fermeture (✕) : barre masquée, c'était la seule sortie manquante.
 
 ## Pipeline d'optimisation
 

@@ -38,6 +38,11 @@ struct ImageArmApp: App {
                 }
                 .keyboardShortcut("o", modifiers: .command)
             }
+            // Menu Présentation natif : « Masquer la barre d'outils » (⌥⌘T) et
+            // « Personnaliser la barre d'outils… ». Ce dernier ne s'active que
+            // parce que ContentView utilise `.toolbar(id:)`.
+            ToolbarCommands()
+            OptimizationCommands(store: store, logStore: LogStore.shared)
         }
 
         Settings {

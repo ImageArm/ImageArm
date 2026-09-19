@@ -50,22 +50,31 @@ struct ContentView: View {
         }
         .toolbar {
             ToolbarItemGroup(placement: .automatic) {
-                Picker("Niveau", selection: $store.level) {
-                    ForEach(OptimizationLevel.allCases) { level in
-                        Label(level.name, systemImage: level.icon)
-                            .tag(level)
+                // Un Picker `.menu` en toolbar n'affiche que l'icône du Label :
+                // le niveau sélectionné devenait invisible. Un Menu explicite
+                // permet de montrer le nom, et l'indicateur de perte descend
+                // dans les entrées où il sert à choisir.
+                Menu {
+                    Picker("Niveau", selection: $store.level) {
+                        ForEach(OptimizationLevel.allCases) { level in
+                            // Un Picker de menu aplatit chaque entrée à son libellé
+                            // principal : un Text secondaire serait ignoré, d'où
+                            // l'indicateur fusionné dans le titre.
+                            Label("\(level.name) — \(level.lossIndicator)", systemImage: level.icon)
+                                .tag(level)
+                        }
                     }
+                    .pickerStyle(.inline)
+                    .labelsHidden()
+                } label: {
+                    // .titleAndIcon est indispensable : sans lui, SwiftUI réduit
+                    // le Label à sa seule icône dans une toolbar.
+                    Label(store.level.name, systemImage: store.level.icon)
+                        .labelStyle(.titleAndIcon)
                 }
-                .pickerStyle(.menu)
-                .help("Niveau d'optimisation")
-
-                Text(store.level.lossIndicator)
-                    .font(.caption2)
-                    .foregroundStyle(.secondary)
-                    .padding(.horizontal, 6)
-                    .padding(.vertical, 2)
-                    .background(Color(nsColor: .controlBackgroundColor))
-                    .clipShape(Capsule())
+                .menuStyle(.borderlessButton)
+                .fixedSize()
+                .help("Niveau d'optimisation — \(store.level.lossIndicator)")
 
                 Toggle(isOn: $logStore.isVisible) {
                     Label("Console", systemImage: "terminal")

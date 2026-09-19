@@ -4,7 +4,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-ImageArm is a macOS SwiftUI app (macOS 14+) that batch-optimizes images (PNG, JPEG, GIF, TIFF, AVIF, SVG, WebP, ICNS) using a pipeline of external CLI tools and Metal GPU acceleration. The UI is in French.
+ImageArm is a macOS SwiftUI app (macOS 14+) that batch-optimizes images (PNG, JPEG, GIF, TIFF, AVIF, SVG, WebP, ICNS) using a pipeline of external CLI tools and Metal GPU acceleration.
+
+The UI is **localized** via `Sources/ImageArm/Localizable.xcstrings` (`sourceLanguage: fr`): French source strings act as the keys, with translations for en, de, nl, it. `CFBundleDevelopmentRegion` **must stay `fr`** in both `Info.plist` and `project.yml` — setting it to `en` produces a bundle with no `fr.lproj`, and French users silently fall back to the English translations.
 
 ## Build & Run
 

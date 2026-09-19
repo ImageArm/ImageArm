@@ -50,9 +50,9 @@ enum OptimizationLevel: Int, CaseIterable, Identifiable, Codable {
 
     var lossIndicator: String {
         switch self {
-        case .quick, .standard: return String(localized: "(sans perte)")
-        case .high: return String(localized: "(compression max)")
-        case .ultra: return String(localized: "(compression extrême)")
+        case .quick, .standard: return String(localized: "sans perte")
+        case .high: return String(localized: "compression max")
+        case .ultra: return String(localized: "compression extrême")
         }
     }
 

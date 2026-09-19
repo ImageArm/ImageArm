@@ -148,7 +148,10 @@ if ! codesign --verify --deep --strict "$MOUNT/$APP_NAME.app" 2>/dev/null; then
     VERIFY_FAILED=1
 fi
 for TOOL in pngquant oxipng cjpeg jpegtran svgo cwebp gifsicle; do
-    if ! codesign -dv "$MOUNT/$APP_NAME.app/Contents/MacOS/$TOOL" 2>&1 | grep -q "Authority=Developer ID Application"; then
+    # --verbose=2 obligatoire : les lignes Authority= n'apparaissent pas en
+    # verbosité 1, et `codesign -dv` seul faisait échouer le contrôle sur des
+    # binaires pourtant correctement signés.
+    if ! codesign -dv --verbose=2 "$MOUNT/$APP_NAME.app/Contents/MacOS/$TOOL" 2>&1 | grep -q "Authority=Developer ID Application"; then
         echo "  ❌ $TOOL n'est pas signé Developer ID (notarisation impossible)"
         VERIFY_FAILED=1
     fi

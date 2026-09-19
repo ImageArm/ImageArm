@@ -11,10 +11,10 @@
 #   0. Pré-vol : outils CLI présents et signés Developer ID
 #   1. Bump version dans Info.plist
 #   2. Build DMG (depuis un build propre) + vérification des signatures
-#   3. Commit + push (HTTPS via gh token)
-#   4. GitHub Release
-#   5. Tap Homebrew
-#   6. Wiki (releases.md)
+#   3. Wiki (releases.md) — avant le commit, pour être inclus dedans
+#   4. Commit + push (HTTPS via le token du compte ImageArm)
+#   5. GitHub Release
+#   6. Tap Homebrew
 set -e
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
@@ -161,13 +161,50 @@ trap restore_remote EXIT
 [ "$VERIFY_FAILED" -eq 0 ] || { echo "❌ DMG invalide — publication annulée"; exit 1; }
 echo "  ✅ Bundle et 7 outils signés Developer ID"
 
-# ── 3. Commit + push ───────────────────────────────────────────────────────────
+# ── 3. Wiki ────────────────────────────────────────────────────────────────────
+
+# Le wiki est mis à jour AVANT le commit : tant qu'il était en dernière étape,
+# sa modification arrivait après le push et n'était jamais commitée — il fallait
+# rédiger l'entrée à la main après coup.
+echo "📖 Mise à jour wiki..."
+
+if [ -f "$WIKI_RELEASES" ]; then
+    # L'entrée passe par un fichier, pas par `awk -v` : l'awk de macOS (BSD)
+    # rejette toute variable -v contenant un retour à la ligne
+    # (« awk: newline in string »), et $NOTES est systématiquement multi-ligne.
+    ENTRY_FILE=$(mktemp)
+    printf '\n## v%s (build %s) — %s\n\n%s\n' "$VERSION" "$BUILD" "$DATE" "$NOTES" > "$ENTRY_FILE"
+
+    # Insertion après le titre H1
+    TMPFILE=$(mktemp)
+    awk -v f="$ENTRY_FILE" '
+        /^# Historique des releases/ {
+            print
+            while ((getline line < f) > 0) print line
+            close(f)
+            next
+        }
+        { print }
+    ' "$WIKI_RELEASES" > "$TMPFILE"
+    mv "$TMPFILE" "$WIKI_RELEASES"
+    rm -f "$ENTRY_FILE"
+
+    # Mettre à jour la date dans le frontmatter
+    sed -i '' "s/^updated: .*/updated: $DATE/" "$WIKI_RELEASES"
+
+    echo "  ✅ wiki/releases.md mis à jour"
+else
+    echo "  ⚠️  wiki/releases.md introuvable — crée le wiki avec /wiki d'abord"
+fi
+
+# ── 4. Commit + push ───────────────────────────────────────────────────────────
 
 echo "📦 Commit + push..."
 git add Info.plist ImageArm.xcodeproj/project.pbxproj
+git add "$WIKI_RELEASES" 2>/dev/null || true
 
 # Ajouter les fichiers sources modifiés s'il y en a
-git add -u Sources/ Tests/ 2>/dev/null || true
+git add -u Sources/ Tests/ docs/ tools/ project.yml 2>/dev/null || true
 
 git commit -m "Chore: bump version $VERSION (build $BUILD) — ${NOTES}"
 
@@ -186,7 +223,7 @@ git pull origin main --rebase
 git push origin main
 restore_remote
 
-# ── 4. GitHub Release ──────────────────────────────────────────────────────────
+# ── 5. GitHub Release ──────────────────────────────────────────────────────────
 
 echo "🚀 GitHub Release v$VERSION..."
 cp "$ROOT/build/ImageArm.dmg" "/tmp/ImageArm-$VERSION.dmg"
@@ -195,37 +232,10 @@ GH_TOKEN="$GH_PUSH_TOKEN" gh release create "v$VERSION" "/tmp/ImageArm-$VERSION.
     --title "ImageArm $VERSION" \
     --notes "$NOTES"
 
-# ── 5. Tap Homebrew ────────────────────────────────────────────────────────────
+# ── 6. Tap Homebrew ────────────────────────────────────────────────────────────
 
 echo "🍺 Mise à jour Homebrew tap..."
 bash "$SCRIPT_DIR/update-homebrew-tap.sh" "$VERSION"
-
-# ── 6. Wiki ────────────────────────────────────────────────────────────────────
-
-echo "📖 Mise à jour wiki..."
-
-if [ -f "$WIKI_RELEASES" ]; then
-    # Insérer la nouvelle release après la ligne "# Historique des releases ImageArm"
-    ENTRY="
-## v$VERSION (build $BUILD) — $DATE
-
-$NOTES
-"
-    # Insertion après le titre H1
-    TMPFILE=$(mktemp)
-    awk -v entry="$ENTRY" '
-        /^# Historique des releases/ { print; print entry; next }
-        { print }
-    ' "$WIKI_RELEASES" > "$TMPFILE"
-    mv "$TMPFILE" "$WIKI_RELEASES"
-
-    # Mettre à jour la date dans le frontmatter
-    sed -i '' "s/^updated: .*/updated: $DATE/" "$WIKI_RELEASES"
-
-    echo "  ✅ wiki/releases.md mis à jour"
-else
-    echo "  ⚠️  wiki/releases.md introuvable — crée le wiki avec /wiki d'abord"
-fi
 
 # ── Résumé ────────────────────────────────────────────────────────────────────
 

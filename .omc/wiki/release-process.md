@@ -70,10 +70,13 @@ hdiutil detach /tmp/v
 | `madjuju` (souvent l'actif) | `pull` seulement — **push refusé** |
 | `ImageArm` | `admin` / `push` |
 
-La clé SSH `~/.ssh/imagearm` est rattachée à **madjuju** : le push SSH échoue donc en
-`ERROR: Permission to ImageArm/ImageArm.git denied to madjuju`. Le push HTTPS échouait
-pour la même raison — `gh auth token` renvoie le token du compte *actif*, pas celui du
-compte nommé dans l'URL.
+Le push HTTPS échouait parce que `gh auth token` renvoie le token du compte *actif*, pas
+celui du compte nommé dans l'URL.
+
+Le push SSH échouait, lui, pour une raison distincte — désormais corrigée, voir
+[[bugs-connus#ssh-mauvais-compte]]. La clé `~/.ssh/imagearm` **est bien enregistrée sur le
+compte ImageArm** ; c'est l'ordre des identités dans `~/.ssh/config` qui en présentait une
+autre avant elle.
 
 Toujours demander le token explicitement :
 
@@ -91,8 +94,7 @@ git remote set-url origin git@github.com-imagearm:ImageArm/ImageArm.git
 > l'URL SSH via un `trap` même s'il s'interrompt (sinon le token reste en clair dans
 > `.git/config`).
 >
-> Pour rendre le push SSH utilisable, il faudrait enregistrer `~/.ssh/imagearm.pub` sur
-> le compte `ImageArm` plutôt que sur `madjuju`.
+> Le push SSH direct fonctionne à nouveau depuis la correction de `~/.ssh/config`.
 
 ### 4. GitHub Release
 

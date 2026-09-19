@@ -32,6 +32,35 @@ func applicationWillFinishLaunching(_ notification: Notification) {
 
 ---
 
+## ssh-mauvais-compte
+
+**Symptôme** : `git push` vers `github.com-imagearm` échoue en
+`ERROR: Permission to ImageArm/ImageArm.git denied to madjuju`, et
+`ssh -T git@github.com-imagearm` répond « Hi madjuju! » — alors que
+`~/.ssh/imagearm` est bien la clé enregistrée sur le compte **ImageArm**.
+
+**Fausse piste** : on a longtemps cru la clé rattachée au mauvais compte. Elle ne l'était
+pas — son empreinte correspond exactement à la clé du compte ImageArm.
+
+**Cause réelle** : `IdentityFile` est **cumulatif** dans `~/.ssh/config`, pas
+« premier gagnant ». Un bloc `Host *` placé en tête déclarait
+`IdentityFile ~/.ssh/id_rsa` ; cette clé était donc ajoutée à la liste **avant** celle du
+bloc spécifique, et présentée en premier. GitHub l'acceptait (compte madjuju) sans jamais
+atteindre `~/.ssh/imagearm`. `IdentitiesOnly yes` n'y change rien : il restreint aux
+identités *configurées*, ce que `Host *` est aussi.
+
+```bash
+ssh -G github.com-imagearm | grep identityfile   # révèle l'ordre réel
+# avant : id_rsa puis imagearm     → « Hi madjuju! »
+# après : imagearm puis id_rsa     → « Hi ImageArm! »
+```
+
+**Fix** : `IdentityFile ~/.ssh/id_rsa` sorti du `Host *` de tête et replacé dans un
+`Host *` en **fin** de fichier. La clé par défaut doit toujours être la dernière ;
+les blocs spécifiques passent ainsi en premier. Sauvegarde : `~/.ssh/config.bak-*`.
+
+---
+
 ## localisation-fr
 
 **Symptôme** : l'app s'affiche en anglais (« Drop your images here ») sur un système français.

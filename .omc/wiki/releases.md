@@ -7,6 +7,14 @@ updated: 2026-09-19
 
 # Historique des releases ImageArm
 
+## v1.6.1 (build 15) — 2026-09-19
+
+Fix: « Masquer la barre d'outils » (⌥⌘T) ne survivait pas au relancement.
+
+La barre réapparaissait au lancement suivant, ce qui vidait de son sens la fonctionnalité annoncée en 1.6.0. AppKit enregistrait pourtant bien le choix — c'est SwiftUI qui reposait la barre en visible à la création de la fenêtre. Le choix est désormais restauré explicitement au démarrage, dans les deux sens.
+
+Merci à @eduardodesigner pour le signalement initial (#7).
+
 ## v1.6.0 (build 14) — 2026-09-19
 
 Feat: barre d'outils masquable et personnalisable (#7)

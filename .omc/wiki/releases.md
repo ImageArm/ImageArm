@@ -7,6 +7,20 @@ updated: 2026-09-19
 
 # Historique des releases ImageArm
 
+## v1.6.0 (build 14) — 2026-09-19
+
+Feat: barre d'outils masquable et personnalisable (#7)
+
+- **Présentation ▸ Masquer la barre d'outils** (⌥⌘T) et **Personnaliser la barre d'outils…** : glisser-déposer des boutons, modes Icône / Texte / Icône et texte, disposition mémorisée par macOS.
+- Deux nouveaux boutons disponibles dans la palette de personnalisation : **Vider les terminés** et **Réglages…**
+- **Nouveau menu Optimisation** : Optimiser tout (⌘↩), Arrêter l'optimisation (⌘.), Niveau d'optimisation, Vider la liste (⇧⌘⌫), Vider les terminés. Toutes les actions de la barre d'outils existent désormais aussi dans la barre des menus — l'app reste entièrement pilotable barre masquée.
+- Présentation ▸ Afficher/Masquer la console (⇧⌘L), plus un bouton de fermeture dans l'en-tête de la console.
+- Optimiser et Stop fusionnés en un seul bouton qui bascule selon l'état du traitement.
+
+Fix: trois chaînes des Réglages n'étaient pas traduites (« Fichiers » et les deux options de préservation).
+
+Tests: 111 → 121.
+
 ## v1.5.1 (build 13) — 2026-09-19
 
 **Feat : support des fichiers `.icns` + restauration de l'UI française**

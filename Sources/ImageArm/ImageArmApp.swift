@@ -25,6 +25,7 @@ struct ImageArmApp: App {
                         .onAppear {
                             appDelegate.store = store
                             appDelegate.processPendingFiles()
+                            appDelegate.restoreToolbarVisibility()
                         }
                 }
             }
@@ -80,6 +81,66 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
         !isHeadless
+    }
+
+    func applicationWillTerminate(_ notification: Notification) {
+        persistToolbarVisibility()
+    }
+
+    // MARK: - Visibilité de la barre d'outils
+
+    // SwiftUI repose `toolbar.isVisible = true` à la création de la fenêtre et
+    // écrase l'autosauvegarde d'AppKit : sans ça, « Masquer la barre d'outils »
+    // (⌥⌘T) ne survivait pas au relancement (issue #7).
+    //
+    // La restauration est **impérative et ponctuelle**, jamais déclarative : un
+    // `.toolbar(.hidden, for: .windowToolbar)` piloté par `@AppStorage` serait
+    // réappliqué à chaque évaluation du corps de ContentView — donc en continu
+    // pendant un lot, `store.files` publiant à chaque fichier — et écraserait le
+    // basculement natif de l'utilisateur en pleine optimisation.
+
+    private static let toolbarVisibleKey = "toolbarVisible"
+    private var toolbarVisibilityRestored = false
+
+    @MainActor
+    func restoreToolbarVisibility() {
+        guard !isHeadless, !toolbarVisibilityRestored else { return }
+
+        // La barre n'est pas encore installée sur la NSWindow au moment du
+        // premier `onAppear` de ContentView.
+        DispatchQueue.main.async { [weak self] in
+            guard let self, !self.toolbarVisibilityRestored,
+                  let toolbar = Self.mainToolbar() else { return }
+            self.toolbarVisibilityRestored = true
+
+            // Absente au premier lancement : on garde le défaut (barre visible).
+            if UserDefaults.standard.object(forKey: Self.toolbarVisibleKey) != nil {
+                toolbar.isVisible = UserDefaults.standard.bool(forKey: Self.toolbarVisibleKey)
+            }
+
+            NotificationCenter.default.addObserver(
+                self,
+                selector: #selector(self.persistToolbarVisibility),
+                name: NSWindow.willCloseNotification,
+                object: nil
+            )
+        }
+    }
+
+    @objc private func persistToolbarVisibility() {
+        guard !isHeadless, let toolbar = Self.mainToolbar() else { return }
+        UserDefaults.standard.set(toolbar.isVisible, forKey: Self.toolbarVisibleKey)
+    }
+
+    private static func mainToolbar() -> NSToolbar? {
+        // L'identifiant de `.toolbar(id:)` se retrouve sur la NSToolbar. Le
+        // repli couvre le cas où SwiftUI cesserait de le propager — la fenêtre
+        // de réglages, elle, n'a pas de barre d'outils.
+        if let toolbar = NSApp.windows.lazy.compactMap(\.toolbar)
+            .first(where: { $0.identifier == ToolbarItemID.toolbarID }) {
+            return toolbar
+        }
+        return NSApp.windows.lazy.compactMap(\.toolbar).first
     }
 
     /// Called when files are opened via `open -a ImageArm file.png` or Finder Quick Action.

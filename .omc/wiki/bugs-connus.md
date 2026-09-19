@@ -21,13 +21,25 @@ updated: 2026-09-19
 
 ## toolbar-visibilite-non-persistee
 
-**Symptôme** (à confirmer sur écran local) : « Masquer la barre d'outils » (⌥⌘T) fonctionne pendant la session, mais la barre réapparaît au relancement.
+**Symptôme** : « Masquer la barre d'outils » (⌥⌘T) fonctionnait pendant la session, mais la barre réapparaissait au relancement. Signalé sur la v1.6.0, **corrigé en v1.6.1**.
 
-**Observation** : AppKit écrit bien `NSToolbar Configuration mainToolbar` dans les préférences (`TB Display Mode`, `TB Icon Size Mode`, `TB Is Shown`, `TB Size Mode`) — le nom d'autosauvegarde est l'identifiant passé à `.toolbar(id:)`. Mais une valeur `TB Is Shown = 0` écrite à la main est **réécrite à 1 au lancement suivant**, ce qui suggère que SwiftUI force la visibilité à la création de la fenêtre.
+**Cause** : AppKit écrit bien `NSToolbar Configuration mainToolbar` (`TB Is Shown = 0`) — l'écriture n'était pas le problème. C'est **SwiftUI qui repose `toolbar.isVisible = true` à la création de la fenêtre**, écrasant l'autosauvegarde avant qu'elle ne serve.
 
-**Non tranché** : la vérification a été faite dans une session distante où la fenêtre était hors écran actif (`kCGWindowIsOnscreen = false`, 0 fenêtre vue par l'API d'accessibilité), donc les commandes de menu liées à la fenêtre clé ne s'appliquaient pas. À revérifier sur un écran local : masquer avec ⌥⌘T, quitter, relancer.
+**Correctif** (`ImageArmApp.swift`) : restauration **impérative et ponctuelle** dans `AppDelegate`. `restoreToolbarVisibility()` est appelée depuis le `onAppear` de `ContentView`, en `DispatchQueue.main.async` car la barre n'est pas encore installée sur la `NSWindow` à ce moment-là ; l'état est persisté sous la clé `toolbarVisible` sur `NSWindow.willCloseNotification` et `applicationWillTerminate`.
 
-**Correctif si confirmé** : restauration **impérative** et ponctuelle dans `AppDelegate` (lire un booléen de `UserDefaults` dans `applicationDidFinishLaunching`, le poser sur `NSApp.windows.first?.toolbar?.isVisible`, le persister sur `NSWindow.willCloseNotification`), avec `guard !isHeadless`. **Ne pas** utiliser `@AppStorage` + `.toolbar(.hidden, for: .windowToolbar)` : ce modificateur est déclaratif, donc il serait réappliqué à chaque évaluation du corps de `ContentView` (très fréquente pendant un lot, `store.files` publie en continu) et écraserait le basculement natif de l'utilisateur en pleine optimisation.
+**Ce qu'il ne faut PAS faire** : `@AppStorage` + `.toolbar(.hidden, for: .windowToolbar)`. Ce modificateur est déclaratif, donc réappliqué à chaque évaluation du corps de `ContentView` — c'est-à-dire en continu pendant un lot, `store.files` publiant à chaque fichier — et il écraserait le basculement natif de l'utilisateur en pleine optimisation.
+
+**Vérification** : se fier à la présence de l'élément d'accessibilité `AXToolbar` sur la fenêtre, **pas** au titre de l'entrée de menu « Afficher/Masquer la barre d'outils » : ce titre ne se met pas à jour de façon fiable (quirk SwiftUI, sans conséquence fonctionnelle).
+
+## ecran-partage-sls-software-renderer
+
+**Symptôme** : l'app se fige (roue multicolore) après l'ouverture du sélecteur de fichiers (⌘O), sans générer de rapport de crash.
+
+**Cause probable** : en session d'écran partagé (`ScreensharingAgent` / `ARDAgent`), macOS bascule sur le **renderer logiciel** du window server. Le seul rapport de hang observé a son thread principal bloqué sur `dlopen` dans `SkyLight __SLSGLSoftwareRendererIsLoaded` → `SLSDeviceLock` → `CoreGraphics ripd_Lock`, pendant un `NSCoreDragManager _dragUntilMouseUp`. Aucune ligne d'ImageArm dans cette pile.
+
+**Non reproduit** : 4 scénarios testés sur la v1.6.0 (⌘O seul, ⌘O + navigation ⇧⌘G, parcours clavier avec vignettes, glisser-déposer souris dans le panneau) — l'app répond en 147-214 ms dans tous les cas, mesuré par requête d'accessibilité avec timeout. Le chemin de code de ⌘O (`showFilePicker`, `.fileImporter`) est par ailleurs **identique depuis la v1.5.1**.
+
+**À retenir** : ne pas conclure à un plantage applicatif depuis une session d'écran partagé sans avoir rejoué sur écran local. Et pour tester un blocage, mesurer la **réactivité** (requête AX avec timeout), pas la simple existence du process : un beachball, c'est un process bien vivant.
 
 ## multi-fenetres
 

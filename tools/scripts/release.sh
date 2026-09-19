@@ -8,8 +8,9 @@
 #   bash tools/scripts/release.sh 1.3.2 "Fix: correction du truc"
 #
 # Étapes :
+#   0. Pré-vol : outils CLI présents et signés Developer ID
 #   1. Bump version dans Info.plist
-#   2. Build DMG
+#   2. Build DMG (depuis un build propre) + vérification des signatures
 #   3. Commit + push (HTTPS via gh token)
 #   4. GitHub Release
 #   5. Tap Homebrew
@@ -19,6 +20,18 @@ set -e
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 ROOT="$SCRIPT_DIR/../.."
 WIKI_RELEASES="$ROOT/.omc/wiki/releases.md"
+SSH_REMOTE="git@github.com-imagearm:ImageArm/ImageArm.git"
+APP_NAME="ImageArm"
+GH_ACCOUNT="ImageArm"
+
+# L'étape 3 bascule le remote en HTTPS + token. Sans ce trap, une sortie en
+# erreur (push refusé, réseau) laissait le token en clair dans .git/config.
+ORIGINAL_REMOTE="$(git -C "$ROOT" remote get-url origin 2>/dev/null || echo "$SSH_REMOTE")"
+case "$ORIGINAL_REMOTE" in
+    *@github.com/*) ORIGINAL_REMOTE="$SSH_REMOTE" ;;  # run précédent interrompu
+esac
+restore_remote() { git -C "$ROOT" remote set-url origin "$ORIGINAL_REMOTE" 2>/dev/null || true; }
+trap restore_remote EXIT
 
 # ── Arguments ─────────────────────────────────────────────────────────────────
 
@@ -36,7 +49,8 @@ if [ -z "$NOTES" ]; then
 fi
 
 # Déterminer le numéro de build (CFBundleVersion actuel + 1)
-CURRENT_BUILD=$(grep -A1 'CFBundleVersion' "$ROOT/Info.plist" | grep '<string>' | sed 's/.*<string>\(.*\)<\/string>/\1/' | tr -d ' ')
+PLIST="/usr/libexec/PlistBuddy"
+CURRENT_BUILD=$("$PLIST" -c "Print :CFBundleVersion" "$ROOT/Info.plist")
 BUILD=$((CURRENT_BUILD + 1))
 
 DATE=$(date +%Y-%m-%d)
@@ -49,19 +63,83 @@ echo ""
 
 echo "📝 Bump version $VERSION (build $BUILD)..."
 
-# CFBundleShortVersionString
-CURRENT_VERSION=$(grep -A1 'CFBundleShortVersionString' "$ROOT/Info.plist" | grep '<string>' | sed 's/.*<string>\(.*\)<\/string>/\1/' | tr -d ' ')
-sed -i '' "s/<string>$CURRENT_VERSION<\/string>/<string>$VERSION<\/string>/1" "$ROOT/Info.plist"
-
-# CFBundleVersion
-sed -i '' "s/<string>$CURRENT_BUILD<\/string>/<string>$BUILD<\/string>/1" "$ROOT/Info.plist"
+# PlistBuddy cible la clé exacte — le sed précédent réécrivait toute ligne
+# <string> de même valeur, où qu'elle soit dans le fichier.
+"$PLIST" -c "Set :CFBundleShortVersionString $VERSION" "$ROOT/Info.plist"
+"$PLIST" -c "Set :CFBundleVersion $BUILD" "$ROOT/Info.plist"
 
 # ── 2. Build DMG ───────────────────────────────────────────────────────────────
 
-echo "🔨 Build + DMG..."
 cd "$ROOT"
+
+# Pré-vol : `make dmg` ne dépend PAS de `make tools` — il se contente de copier
+# tools/bin/ (gitignoré) dans le bundle. Sur un dépôt propre, le build échoue
+# sur PhaseScriptExecution avec un « No such file or directory » peu parlant.
+echo "🔍 Vérification des droits d'écriture GitHub..."
+CAN_PUSH="$(GH_TOKEN="$(gh auth token --user "$GH_ACCOUNT" 2>/dev/null)" \
+    gh api repos/ImageArm/ImageArm --jq '.permissions.push' 2>/dev/null || echo false)"
+if [ "$CAN_PUSH" != "true" ]; then
+    echo "  ❌ Le compte $GH_ACCOUNT n'a pas le droit push sur ImageArm/ImageArm."
+    echo "     Comptes connus : $(gh auth status 2>&1 | grep -oE 'account [a-zA-Z0-9_-]+' | sed 's/account //' | tr '\n' ' ')"
+    echo "     Lancer : gh auth login --user $GH_ACCOUNT"
+    exit 1
+fi
+echo "  ✅ $GH_ACCOUNT peut pousser"
+
+echo "🔍 Vérification des outils CLI embarqués..."
+MISSING_TOOLS=""
+for TOOL in pngquant oxipng cjpeg jpegtran svgo cwebp gifsicle; do
+    [ -f "$ROOT/tools/bin/$TOOL" ] || MISSING_TOOLS="$MISSING_TOOLS $TOOL"
+done
+if [ -n "$MISSING_TOOLS" ]; then
+    echo "  ❌ Outils manquants dans tools/bin/ :$MISSING_TOOLS"
+    echo "     Lancer : git submodule update --init --recursive && make -f tools/Makefile tools"
+    exit 1
+fi
+echo "  ✅ 7 outils présents"
+
+# Les binaires embarqués doivent porter une signature Developer ID : Xcode scelle
+# le bundle sans les resigner, et Apple rejette la notarisation d'un code interne
+# en signature ad-hoc. `make release` n'appelle pas sign-tools — on le fait ici.
+echo "🔏 Signature des outils embarqués..."
+make -f tools/Makefile sign-tools
+
 xcodegen generate --quiet 2>/dev/null || xcodegen generate
+
+# Build propre obligatoire : le script post-compile recopie tools/bin/ à chaque
+# build, mais Xcode saute la phase CodeSign si l'exécutable n'a pas changé. On
+# obtient alors un bundle scellé sur les anciens hachages — codesign --verify
+# --deep sort « nested code is modified or invalid ».
+echo "🧹 Nettoyage du build précédent..."
+rm -rf "$ROOT/build/DerivedData" "$ROOT/build/$APP_NAME.app" "$ROOT/build/ImageArm.dmg"
+
+echo "🔨 Build + DMG..."
 make -f tools/Makefile dmg
+
+# ── 2b. Vérification du DMG avant publication ─────────────────────────────────
+
+echo "🔎 Vérification des signatures dans le DMG..."
+MOUNT="$(mktemp -d)/imagearm-verify"
+hdiutil attach "$ROOT/build/ImageArm.dmg" -nobrowse -readonly -mountpoint "$MOUNT" -quiet
+verify_cleanup() { hdiutil detach "$MOUNT" -quiet 2>/dev/null || true; restore_remote; }
+trap verify_cleanup EXIT
+
+VERIFY_FAILED=0
+if ! codesign --verify --deep --strict "$MOUNT/$APP_NAME.app" 2>/dev/null; then
+    echo "  ❌ codesign --verify --deep a échoué sur le bundle"
+    codesign --verify --deep --strict --verbose=2 "$MOUNT/$APP_NAME.app" 2>&1 | grep -v '^--' | head -10
+    VERIFY_FAILED=1
+fi
+for TOOL in pngquant oxipng cjpeg jpegtran svgo cwebp gifsicle; do
+    if ! codesign -dv "$MOUNT/$APP_NAME.app/Contents/MacOS/$TOOL" 2>&1 | grep -q "Authority=Developer ID Application"; then
+        echo "  ❌ $TOOL n'est pas signé Developer ID (notarisation impossible)"
+        VERIFY_FAILED=1
+    fi
+done
+hdiutil detach "$MOUNT" -quiet 2>/dev/null || true
+trap restore_remote EXIT
+[ "$VERIFY_FAILED" -eq 0 ] || { echo "❌ DMG invalide — publication annulée"; exit 1; }
+echo "  ✅ Bundle et 7 outils signés Developer ID"
 
 # ── 3. Commit + push ───────────────────────────────────────────────────────────
 
@@ -73,17 +151,27 @@ git add -u Sources/ Tests/ 2>/dev/null || true
 
 git commit -m "Chore: bump version $VERSION (build $BUILD) — ${NOTES}"
 
-git remote set-url origin "https://ImageArm:$(gh auth token)@github.com/ImageArm/ImageArm.git"
+# `gh auth token` renvoie le token du compte ACTIF. Sur cette machine c'est
+# madjuju, qui n'a que le droit pull sur ImageArm/ImageArm — d'où un 403
+# « Permission denied » alors que l'URL porte le nom ImageArm. On demande
+# explicitement le token du compte ImageArm, quel que soit le compte actif.
+GH_PUSH_TOKEN="$(gh auth token --user "$GH_ACCOUNT" 2>/dev/null || true)"
+if [ -z "$GH_PUSH_TOKEN" ]; then
+    echo "  ❌ Aucun token pour le compte $GH_ACCOUNT — lancer : gh auth login --user $GH_ACCOUNT"
+    exit 1
+fi
+
+git remote set-url origin "https://$GH_ACCOUNT:$GH_PUSH_TOKEN@github.com/ImageArm/ImageArm.git"
 git pull origin main --rebase
 git push origin main
-git remote set-url origin git@github.com-imagearm:ImageArm/ImageArm.git
+restore_remote
 
 # ── 4. GitHub Release ──────────────────────────────────────────────────────────
 
 echo "🚀 GitHub Release v$VERSION..."
 cp "$ROOT/build/ImageArm.dmg" "/tmp/ImageArm-$VERSION.dmg"
 
-gh release create "v$VERSION" "/tmp/ImageArm-$VERSION.dmg" \
+GH_TOKEN="$GH_PUSH_TOKEN" gh release create "v$VERSION" "/tmp/ImageArm-$VERSION.dmg" \
     --title "ImageArm $VERSION" \
     --notes "$NOTES"
 

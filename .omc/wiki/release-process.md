@@ -34,24 +34,65 @@ Dans `Info.plist` : incrémenter `CFBundleShortVersionString` et `CFBundleVersio
 ### 2. Build DMG
 
 ```bash
+make -f tools/Makefile sign-tools   # ⚠️ indispensable — voir ci-dessous
+rm -rf build/DerivedData build/ImageArm.app
 xcodegen generate
 make -f tools/Makefile dmg
 # Produit : build/ImageArm.dmg
 ```
 
+Deux pièges, tous deux automatisés dans `release.sh` :
+
+1. **`make release` n'appelle pas `sign-tools`.** Les binaires de `tools/bin/` gardent la
+   signature de leur dernier `sign-tools` ; fraîchement compilés, ils sont en **ad-hoc** et
+   Apple rejette la notarisation d'un code interne non signé Developer ID.
+2. **Le build incrémental produit un bundle invalide.** Le script post-compile recopie
+   `tools/bin/` à chaque build, mais Xcode saute la phase CodeSign si l'exécutable n'a pas
+   changé : le bundle reste scellé sur les anciens hachages et
+   `codesign --verify --deep --strict` sort `nested code is modified or invalid`.
+   D'où le `rm -rf build/DerivedData build/ImageArm.app` préalable.
+
+Vérification avant publication :
+
+```bash
+hdiutil attach build/ImageArm.dmg -nobrowse -readonly -mountpoint /tmp/v
+codesign --verify --deep --strict /tmp/v/ImageArm.app     # doit sortir silencieusement
+codesign -dv /tmp/v/ImageArm.app/Contents/MacOS/gifsicle 2>&1 | grep "Developer ID"
+hdiutil detach /tmp/v
+```
+
 ### 3. Commit + push
 
-Le push SSH échoue (clé liée au compte `madjuju`). Utiliser HTTPS + gh token :
+⚠️ **Deux comptes `gh` coexistent sur la machine de build** :
+
+| Compte | Droits sur `ImageArm/ImageArm` |
+|---|---|
+| `madjuju` (souvent l'actif) | `pull` seulement — **push refusé** |
+| `ImageArm` | `admin` / `push` |
+
+La clé SSH `~/.ssh/imagearm` est rattachée à **madjuju** : le push SSH échoue donc en
+`ERROR: Permission to ImageArm/ImageArm.git denied to madjuju`. Le push HTTPS échouait
+pour la même raison — `gh auth token` renvoie le token du compte *actif*, pas celui du
+compte nommé dans l'URL.
+
+Toujours demander le token explicitement :
 
 ```bash
 git add Info.plist Sources/ ImageArm.xcodeproj/ Tests/
 git commit -m "Fix/Feat/Chore: description (build N)"
 
-git remote set-url origin "https://ImageArm:$(gh auth token)@github.com/ImageArm/ImageArm.git"
+git remote set-url origin "https://ImageArm:$(gh auth token --user ImageArm)@github.com/ImageArm/ImageArm.git"
 git pull origin main --rebase
 git push origin main
 git remote set-url origin git@github.com-imagearm:ImageArm/ImageArm.git
 ```
+
+> `release.sh` gère tout cela : il vérifie le droit push **avant** de builder, et restaure
+> l'URL SSH via un `trap` même s'il s'interrompt (sinon le token reste en clair dans
+> `.git/config`).
+>
+> Pour rendre le push SSH utilisable, il faudrait enregistrer `~/.ssh/imagearm.pub` sur
+> le compte `ImageArm` plutôt que sur `madjuju`.
 
 ### 4. GitHub Release
 

@@ -113,8 +113,25 @@ xcodegen generate --quiet 2>/dev/null || xcodegen generate
 echo "🧹 Nettoyage du build précédent..."
 rm -rf "$ROOT/build/DerivedData" "$ROOT/build/$APP_NAME.app" "$ROOT/build/ImageArm.dmg"
 
+# create-dmg monte un volume temporaire puis le démonte. Spotlight ou Finder le
+# gardent parfois occupé une poignée de secondes : hdiutil sort alors
+# « couldn't unmount - Ressource occupée » et laisse traîner le volume + le
+# scratch build/rw.*.dmg, ce qui fait échouer les runs suivants en cascade.
+cleanup_stale_dmg() {
+    for VOL in /Volumes/dmg.*; do
+        [ -d "$VOL" ] && hdiutil detach "$VOL" -force -quiet 2>/dev/null || true
+    done
+    rm -f "$ROOT"/build/rw.*.dmg
+}
+
 echo "🔨 Build + DMG..."
-make -f tools/Makefile dmg
+cleanup_stale_dmg
+if ! make -f tools/Makefile dmg; then
+    echo "  ⚠️  Échec du DMG — nettoyage des volumes résiduels et seconde tentative..."
+    cleanup_stale_dmg
+    sleep 5
+    make -f tools/Makefile dmg
+fi
 
 # ── 2b. Vérification du DMG avant publication ─────────────────────────────────
 

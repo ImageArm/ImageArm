@@ -32,6 +32,28 @@ func applicationWillFinishLaunching(_ notification: Notification) {
 
 ---
 
+## localisation-fr
+
+**Symptôme** : l'app s'affiche en anglais (« Drop your images here ») sur un système français.
+
+**Cause** : `Localizable.xcstrings` déclare `sourceLanguage: fr` — les chaînes françaises du
+code sont les clés — mais `Info.plist` et `project.yml` déclaraient `CFBundleDevelopmentRegion: en`.
+Xcode ne générait donc aucun `fr.lproj` (le bundle ne contenait que `de/en/it/nl`) et un
+utilisateur français retombait sur `en.lproj`, qui a ses 91 traductions bien réelles.
+
+**Fix (v1.5.1)** : `developmentRegion: fr` dans `project.yml` **et** `CFBundleDevelopmentRegion`
+à `fr` dans `Info.plist`. Les deux doivent rester alignés sur `sourceLanguage` du catalogue.
+
+**Vérification** :
+
+```bash
+ls build/ImageArm.app/Contents/Resources/ | grep lproj   # de, en, it, nl (fr = langue source)
+/usr/libexec/PlistBuddy -c "Print :CFBundleDevelopmentRegion" build/ImageArm.app/Contents/Info.plist
+open -a build/ImageArm.app --args -AppleLanguages '(fr)'
+```
+
+---
+
 ## tests-debounce
 
 **Symptôme** : les 8 `AppDelegateTests` échouent, tous avec `store.files.count == 0`.

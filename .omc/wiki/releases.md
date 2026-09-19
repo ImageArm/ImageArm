@@ -2,10 +2,34 @@
 title: Historique des releases
 category: session-log
 tags: [release, changelog, version]
-updated: 2026-05-21
+updated: 2026-09-19
 ---
 
 # Historique des releases ImageArm
+
+## v1.5.1 (build 13) — 2026-09-19
+
+**Feat : support des fichiers `.icns` + restauration de l'UI française**
+
+- **`.icns`** : pipeline `iconutil -c iconset` → oxipng sur chaque PNG → `iconutil -c icns`.
+  Outils natifs macOS, zéro dépendance. Les `.icns` legacy sans ressource PNG sont ignorés. (closes #6)
+- **UI française restaurée** : `Localizable.xcstrings` déclare `sourceLanguage: fr` mais
+  `CFBundleDevelopmentRegion` valait `en` — aucun `fr.lproj` n'était généré et les utilisateurs
+  français recevaient les traductions anglaises. Voir [[bugs-connus#localisation-fr]].
+- **Sélecteur de niveau refondu** : un `Picker` `.menu` n'affiche que l'icône de son `Label`,
+  le niveau sélectionné était invisible et une capsule `(compression max)` compensait.
+  Remplacé par un menu unique « Rapide — sans perte » … « Ultra — compression extrême ».
+- **5 correctifs de fiabilité du pipeline** (revue adversariale) : ordre du `DispatchGroup`
+  avant `process.run()`, `guard !Task.isCancelled` avant chaque `finalize()`, backups
+  `.imagearm.backup` préservés du nettoyage, fuite des tâches auxiliaires, `isProcessing`
+  pendant un reoptimize.
+- **gifsicle de nouveau embarqué** : il était copié dans le bundle sans règle de compilation.
+  Voir [[bugs-connus#gifsicle-jamais-compile]].
+- **Suite de tests réparée** : elle ne compilait plus depuis la 1.3.3 et masquait 17 tests
+  obsolètes. 111 tests au vert.
+
+Note : les versions 1.5.0 (build 12) et le tag associé n'ont jamais été publiés — la chaîne
+de release était cassée. Voir [[release-process]] pour les garde-fous ajoutés.
 
 ## v1.4.0 (build 11) — 2026-05-21
 
